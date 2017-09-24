@@ -1,6 +1,6 @@
-#include <easyMesh.h>
+#include "easyMesh.h"
 
-#define   LED             5       // GPIO number of connected LED
+#define   LED             6       // GPIO number of connected LED
 
 #define   BLINK_PERIOD    1000000 // microseconds until cycle repeat
 #define   BLINK_DURATION  100000  // microseconds LED is on for
