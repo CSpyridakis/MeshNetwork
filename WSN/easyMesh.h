@@ -12,9 +12,6 @@ extern "C" {
 
 #include "easyMeshSync.h"
 
-//#define MESH_PREFIX         "mesh"
-//#define MESH_PASSWORD       "bootyboo"
-//#define MESH_PORT           4444
 #define NODE_TIMEOUT        3000000  //uSecs
 
 #define JSON_BUFSIZE        300 // initial size for the DynamicJsonBuffers.
@@ -79,8 +76,6 @@ struct meshConnectionType {
 
     syncStatusType      timeSyncStatus = NEEDED;
     uint32_t            lastTimeSync = 0;
-//    bool                needsNodeSync = true;
-//    bool                needsTimeSync = false;
 
     bool                sendReady = true;
     SimpleList<String>  sendQueue;
@@ -97,7 +92,6 @@ public:
     void                debugMsg( debugType type, const char* format ... );
     
     // in easyMesh.cpp
-//    void                init( void );
     void                init( String prefix, String password, uint16_t port );
 
     void                update( void );
