@@ -3,8 +3,9 @@
 
 //Mesh vars
 #define   LED             5           // GPIO number of connected LED.
-#define   UPDATE_INTERVAL    10000    // Sensor update interval in ms.
-#define   LED_DURATION       2000     // Sensor update interval in ms.
+#define   BLINK_PERIOD    1000000     // microseconds until cycle repeat
+#define   BLINK_DURATION  100000      // microseconds LED is on for
+#define   BROADCAST_INTERVAL 10000000    // microseconds between each broadcast
 
 #define   MESH_PREFIX     "mesh"
 #define   MESH_PASSWORD   "12345678"
@@ -33,9 +34,27 @@ void setup() {
 
 void loop() {
 	mesh.update();
-  getReadings(mesh);
-  digitalWrite(LED, false);
-  delay(UPDATE_INTERVAL);
+ bool  onFlag = false;
+ uint32_t cycleTime = mesh.getNodeTime() % BLINK_PERIOD;
+ for (uint8_t i = 0; i < (mesh.connectionCount() + 1); i++) {
+    uint32_t onTime = BLINK_DURATION * i * 2;
+
+    if (cycleTime > onTime && cycleTime < onTime + BLINK_DURATION){
+      onFlag = true;
+    }
+ }
+ digitalWrite(LED, onFlag);
+
+ // get next random time for send message
+ if (sendMessageTime == 0) {
+   sendMessageTime = mesh.getNodeTime() + BROADCAST_INTERVAL;
+ }
+
+ // if the time is ripe, send everyone a message!
+ if (sendMessageTime != 0 && sendMessageTime < mesh.getNodeTime()) {
+      getReadings(mesh);
+  }
+  
 }
 
 void receivedCallback(uint32_t from, String &msg) {
