@@ -5,7 +5,7 @@
 #define   LED             5           // GPIO number of connected LED.
 #define   BLINK_PERIOD    1000000     // microseconds until cycle repeat
 #define   BLINK_DURATION  100000      // microseconds LED is on for
-#define   BROADCAST_INTERVAL 10000000    // microseconds between each broadcast
+#define   BROADCAST_INTERVAL 5000000    // microseconds between each broadcast
 
 #define   MESH_PREFIX     "mesh"
 #define   MESH_PASSWORD   "12345678"
@@ -53,13 +53,10 @@ void loop() {
 
  // if the time is ripe, send everyone a message!
  if (sendMessageTime != 0 && sendMessageTime < mesh.getNodeTime()) {
-    String msg = "Hello from node ";
-    msg += mesh.getChipId();
-    mesh.sendBroadcast(msg);
+    getReadings(mesh);
     sendMessageTime = 0;
   }
   
-  getReadings(mesh);
 }
 
 void receivedCallback(uint32_t from, String &msg) {
