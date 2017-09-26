@@ -84,7 +84,6 @@ String getDHTreadings(){
             float f = dht.readTemperature(true);
             // Check if any reads failed and exit early (to try again).
             if (isnan(h) || isnan(t) || isnan(f)) {
-              Serial.println("Failed to read from DHT sensor!");
               strcpy(celsiusTemp,"Failed");
               strcpy(fahrenheitTemp, "Failed");
               strcpy(humidityTemp, "Failed");      
