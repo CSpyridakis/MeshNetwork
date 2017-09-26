@@ -30,6 +30,7 @@ void setup() {
  
 	mesh.setReceiveCallback(&receivedCallback);
 	mesh.setNewConnectionCallback(&newConnectionCallback);
+  randomSeed(analogRead(A0));
 }
 
 void loop() {
@@ -47,14 +48,18 @@ void loop() {
 
  // get next random time for send message
  if (sendMessageTime == 0) {
-   sendMessageTime = mesh.getNodeTime() + BROADCAST_INTERVAL;
+   sendMessageTime = mesh.getNodeTime() + random(BROADCAST_INTERVAL, 2*BROADCAST_INTERVAL);
  }
 
  // if the time is ripe, send everyone a message!
  if (sendMessageTime != 0 && sendMessageTime < mesh.getNodeTime()) {
-      getReadings(mesh);
+    String msg = "Hello from node ";
+    msg += mesh.getChipId();
+    mesh.sendBroadcast(msg);
+    sendMessageTime = 0;
   }
   
+  getReadings(mesh);
 }
 
 void receivedCallback(uint32_t from, String &msg) {
