@@ -29,17 +29,13 @@ void setup() {
  
 	mesh.setReceiveCallback(&receivedCallback);
 	mesh.setNewConnectionCallback(&newConnectionCallback);
-
-	randomSeed(analogRead(A0));
 }
 
 void loop() {
-  digitalWrite(LED, true);
 	mesh.update();
   getReadings(mesh);
-  delay(LED_DURATION);
   digitalWrite(LED, false);
-  delay(UPDATE_INTERVAL-LED_DURATION);
+  delay(UPDATE_INTERVAL);
 }
 
 void receivedCallback(uint32_t from, String &msg) {
