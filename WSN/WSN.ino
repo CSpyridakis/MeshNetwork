@@ -63,7 +63,7 @@ void loop() {
 }
 
 void receivedCallback(uint32_t from, String &msg) {
-	Serial.printf("Received from %d msg=%s\n", from, msg.c_str());
+	Serial.printf("Received from %d : %s\n", from, msg.c_str());
 }
 
 void newConnectionCallback(bool adopt) {
