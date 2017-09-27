@@ -59,7 +59,8 @@ void loop() {
     getReadings(mesh);
     sendMessageTime = 0;
   }
-  
+
+  delay(1);
 }
 
 void receivedCallback(uint32_t from, String &msg) {
