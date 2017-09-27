@@ -1,6 +1,9 @@
 #include "easyMesh.h"
 #include <DHT.h>
 
+#define SENSOR_NO (3)
+#define ANALOGPIN A0
+
 //Mesh vars
 #define   LED             5           // GPIO number of connected LED.
 #define   BLINK_PERIOD    1000000     // microseconds until cycle repeat
@@ -24,7 +27,7 @@ void setup() {
   
   dht.begin();
   
-	//mesh.setDebugMsgTypes(ERROR | STARTUP);  // Allowed types are: ERROR | MESH_STATUS | CONNECTION | SYNC | COMMUNICATION | GENERAL | MSG_TYPES | REMOTE
+	mesh.setDebugMsgTypes(ERROR | STARTUP);  // Allowed types are: ERROR | MESH_STATUS | CONNECTION | SYNC | COMMUNICATION | GENERAL | MSG_TYPES | REMOTE
 
 	mesh.init(MESH_PREFIX, MESH_PASSWORD, MESH_PORT);
  
@@ -100,16 +103,34 @@ String getDHTreadings(){
             return "  C:"+String(celsiusTemp)+" F:"+String(fahrenheitTemp)+"  H:"+String(humidityTemp)+"%";
 }
 
-//This method sends OTA the data from the correct sensor(s).
-//TODO put a switch statement and send data according to the connected sensors.
+String getPhotoresistorReadings(){
+  int sensorValue = analogRead(A0);
+  int value = sensorValue * (100.0 / 1023.0);
+  return "Light: " + value;  
+}
+
+String getGasReadings(){
+  return "Gas PPM:" + String(analogRead(A0));
+}
+
+//This method sends data from the correct sensor(s).
 void getReadings(easyMesh mesh){
-    String message = getDHTreadings();
-    //Serial.println("SENDING: "+message);
-    
-    if(message.equals("")){ //Sensor failed
-        
-    }else{
-        mesh.sendBroadcast(message);
+    String message = "";
+    switch(SENSOR_NO){
+      case 1: //DHT11
+        message = getDHTreadings();
+        break;
+      case 2: //Photoresistor
+        message = getPhotoresistorReadings();
+        break;      
+      case 3: //MQ135
+        message = getGasReadings();
+        break;      
+      default:
+        message = "Failed to get a reading";
     }
+    mesh.sendBroadcast(message);  //Send to mesh
+    Serial.println(message);      //Send to self
+
 }
 
