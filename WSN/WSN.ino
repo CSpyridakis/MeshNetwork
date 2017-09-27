@@ -105,8 +105,8 @@ String getDHTreadings(){
 
 String getPhotoresistorReadings(){
   int sensorValue = analogRead(A0);
-  int value = sensorValue * (100.0 / 1023.0);
-  return "Light: " + value;  
+  float value = sensorValue * (100 / 1023.0);
+  return "Light: " + String(value);  
 }
 
 String getGasReadings(){
