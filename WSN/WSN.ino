@@ -1,8 +1,9 @@
 #include "easyMesh.h"
 #include <DHT.h>
 
-#define SENSOR_NO (3)
+#define SENSOR_NO 3
 #define ANALOGPIN A0
+#define DHTPin    12
 
 //Mesh vars
 #define   LED                     5             // GPIO number of connected LED.
@@ -18,17 +19,9 @@ static easyMesh  mesh;
 os_timer_t meshUpdateTimer;   //Maintenance mesh network tasks
 os_timer_t readingsTimer;     //Readings from sensor
 
-
-// DHT vars
-#define DHTTYPE DHT11   // DHT 11
-const int DHTPin = 12;  //~D6
-DHT dht(DHTPin, DHTTYPE);
+DHT dht(DHTPin, DHT11);
 
 void setup() {
-  //Make sure the Watchdog bites every 8s.
-  ESP.wdtDisable();
-  ESP.wdtEnable(WDTO_8S);
-  
 	Serial.begin(115200);
 	pinMode(LED, OUTPUT);
  
@@ -105,10 +98,7 @@ String getDHTreadings(){
             // Read temperature as Fahrenheit (isFahrenheit = true)
             float f = dht.readTemperature(true);
             // Check if any reads failed and exit early (to try again).
-            if (isnan(h) || isnan(t) || isnan(f)) {
-              strcpy(celsiusTemp,"Failed");
-              strcpy(fahrenheitTemp, "Failed");
-              strcpy(humidityTemp, "Failed");      
+            if (isnan(h) || isnan(t) || isnan(f)) {    
               return "DHT failed.";   
             }else{
               // Computes temperature values in Celsius + Fahrenheit and Humidity
