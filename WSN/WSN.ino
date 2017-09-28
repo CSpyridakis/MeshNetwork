@@ -3,7 +3,7 @@
 
 #define SENSOR_NO 3
 #define ANALOGPIN A0
-#define DHTPin    12
+#define DHTPin    5 //GPIO 14
 
 //Mesh vars
 #define   LED                     5             // GPIO number of connected LED.
@@ -49,17 +49,12 @@ void loop() {
 }
 
 //Timer tasks and init_timer funcs.
-//Turn off interupts when in an ISR.
 void meshUpdate_timer_task() {
-    os_intr_lock();
     mesh.update();
-    os_intr_unlock();
 }
 
 void getReadings_timer_task() {
-    os_intr_lock();
     getReadings();
-    os_intr_unlock();
 } 
    
 void timers_init(void) {
