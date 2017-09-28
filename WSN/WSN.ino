@@ -14,8 +14,9 @@
 #define   MESH_PORT       5555
 
 static easyMesh  mesh;   
-uint32_t sendMessageTime = 0;
-static ETSTimer timer; 
+
+os_timer_t meshUpdateTimer;   //Maintenance mesh network tasks
+os_timer_t readingsTimer;     //Readings from sensor
 
 
 // DHT vars
@@ -24,7 +25,7 @@ const int DHTPin = 12;  //~D6
 DHT dht(DHTPin, DHTTYPE);
 
 void setup() {
-  //Make sure the Watchdog doesnt bite unexpectedly.
+  //Make sure the Watchdog bites every 8s.
   ESP.wdtDisable();
   ESP.wdtEnable(WDTO_8S);
   
@@ -39,45 +40,45 @@ void setup() {
       break;
   }
   
-	mesh.setDebugMsgTypes(ERROR | STARTUP);  // Allowed types are: ERROR | MESH_STATUS | CONNECTION | SYNC | COMMUNICATION | GENERAL | MSG_TYPES | REMOTE
-
+  // Allowed types are: ERROR | MESH_STATUS | CONNECTION | SYNC | COMMUNICATION | GENERAL | MSG_TYPES | REMOTE 
+	mesh.setDebugMsgTypes(ERROR | STARTUP);  
 	mesh.init(MESH_PREFIX, MESH_PASSWORD, MESH_PORT);
- 
+
+  //Attach the needed callbacks
 	mesh.setReceiveCallback(&receivedCallback);
 	mesh.setNewConnectionCallback(&newConnectionCallback);
 
-  meshUpdate_timer_init();
-  getReadings_timer_init();
+  timers_init();
 }
 
 void loop() {
-  ESP.wdtFeed();
+  yield();
 }
 
-//Timer tasks and init_timer funcs
+//Timer tasks and init_timer funcs.
+//Turn off interupts when in an ISR.
 void meshUpdate_timer_task() {
-    os_timer_disarm(&timer);
+    os_intr_lock();
     mesh.update();
-    os_timer_arm(&timer, MESH_UPDATE_INTERVAL, 0);
+    os_intr_unlock();
 }
 
 void getReadings_timer_task() {
-    os_timer_disarm(&timer);
+    os_intr_lock();
     getReadings();
-    os_timer_arm(&timer, BROADCAST_INTERVAL, 0);
+    os_intr_unlock();
 } 
    
-void getReadings_timer_init(void) {
-    os_timer_disarm(&timer);
-    os_timer_setfn(&timer,(os_timer_func_t *) getReadings_timer_task, NULL);
-    os_timer_arm(&timer, BROADCAST_INTERVAL, 0);
-}
+void timers_init(void) {
+    os_timer_disarm(&meshUpdateTimer);
+    os_timer_disarm(&readingsTimer);
+    
+    os_timer_setfn(&meshUpdateTimer,(os_timer_func_t *) meshUpdate_timer_task, NULL); //Schedule the tasks
+    os_timer_setfn(&readingsTimer,(os_timer_func_t *) getReadings_timer_task, NULL);
 
-void meshUpdate_timer_init(void) {
-    os_timer_disarm(&timer);
-    os_timer_setfn(&timer,(os_timer_func_t *) meshUpdate_timer_task, NULL);
-    os_timer_arm(&timer, MESH_UPDATE_INTERVAL, 0);
-}    
+    os_timer_arm(&meshUpdateTimer, MESH_UPDATE_INTERVAL, true); //3rd arg -> Repeat task
+    os_timer_arm(&readingsTimer, BROADCAST_INTERVAL, true);
+}
 
 void receivedCallback(uint32_t from, String &msg) {
 	Serial.printf("Received from %d : %s\n", from, msg.c_str());
@@ -108,7 +109,7 @@ String getDHTreadings(){
               strcpy(celsiusTemp,"Failed");
               strcpy(fahrenheitTemp, "Failed");
               strcpy(humidityTemp, "Failed");      
-              return "";   
+              return "DHT failed.";   
             }else{
               // Computes temperature values in Celsius + Fahrenheit and Humidity
               hic = dht.computeHeatIndex(t, h, false);       
@@ -123,7 +124,7 @@ String getDHTreadings(){
 String getPhotoresistorReadings(){
   int sensorValue = analogRead(ANALOGPIN);
   float value = sensorValue * (100 / 1023.0);
-  return "Light: " + String(value);  
+  return "Light: " + String(value) + "%";  
 }
 
 String getGasReadings(){
