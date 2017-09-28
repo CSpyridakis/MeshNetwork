@@ -3,7 +3,8 @@
 
 #define SENSOR_NO 3
 #define ANALOGPIN A0
-#define DHTPin    5 //GPIO 14
+#define DHTPin    12 //GPIO 12
+#define DHTTYPE DHT11
 
 //Mesh vars
 #define   LED                     5             // GPIO number of connected LED.
@@ -19,7 +20,7 @@ static easyMesh  mesh;
 os_timer_t meshUpdateTimer;   //Maintenance mesh network tasks
 os_timer_t readingsTimer;     //Readings from sensor
 
-DHT dht(DHTPin, DHT11);
+DHT dht(DHTPin, DHTTYPE);
 
 void setup() {
 	Serial.begin(115200);
