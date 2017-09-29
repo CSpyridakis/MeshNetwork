@@ -57,7 +57,7 @@ void setup() {
   }
   
   // ERROR | MESH_STATUS | CONNECTION | SYNC | COMMUNICATION | GENERAL | MSG_TYPES | REMOTE 
-  mesh.setDebugMsgTypes(ERROR | MESH_STATUS | CONNECTION | COMMUNICATION | GENERAL );  
+  mesh.setDebugMsgTypes(ERROR | MESH_STATUS);  
   mesh.init(MESH_PREFIX, MESH_PASSWORD, MESH_PORT);
 
   //Attach the mesh callbacks
