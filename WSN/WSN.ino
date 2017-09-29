@@ -16,7 +16,7 @@
 #define   MESH_PASSWORD   "12345678"
 #define   MESH_PORT       5555
 
-static easyMesh  mesh;   
+easyMesh  mesh;   
 
 os_timer_t meshUpdateTimer;   //Maintenance mesh network tasks
 os_timer_t readingsTimer;     //Readings from sensor (locally)
@@ -57,7 +57,7 @@ void setup() {
   }
   
   // ERROR | MESH_STATUS | CONNECTION | SYNC | COMMUNICATION | GENERAL | MSG_TYPES | REMOTE 
-  mesh.setDebugMsgTypes(ERROR | STARTUP);  
+  mesh.setDebugMsgTypes(ERROR | MESH_STATUS | CONNECTION | SYNC | COMMUNICATION | GENERAL | MSG_TYPES | REMOTE );  
   mesh.init(MESH_PREFIX, MESH_PASSWORD, MESH_PORT);
 
   //Attach the mesh callbacks
@@ -73,16 +73,12 @@ void loop() {
 
 //Timer task that updates the mesh
 void meshUpdate_timer_task() {
-    noInterrupts();
     mesh.update();
-    interrupts();
 }
 
 //Timer tasks that gets and stores locally the sensor readings.
 void getReadings_timer_task() {
-    noInterrupts();
     getReadings();
-    interrupts();
 } 
 
 //Timer tasks that broadcasts the sensor readings.
