@@ -8,9 +8,9 @@
 #define LED       5             // GPIO number of connected LED.
 
 //Mesh vars
-#define   MESH_UPDATE_INTERVAL    5000L          // microseconds between each broadcast
-#define   SENSOR_UPDATE_INTERVAL  2000L         // microseconds between each sensor update
-#define   BROADCAST_INTERVAL      10000L         // microseconds between each broadcast
+#define   MESH_UPDATE_INTERVAL    1000L          // microseconds between each broadcast
+#define   SENSOR_UPDATE_INTERVAL  1000L         // microseconds between each sensor update
+#define   BROADCAST_INTERVAL      1000L         // microseconds between each broadcast
 
 #define   MESH_PREFIX     "mesh"
 #define   MESH_PASSWORD   "12345678"
@@ -57,7 +57,7 @@ void setup() {
   }
   
   // ERROR | MESH_STATUS | CONNECTION | SYNC | COMMUNICATION | GENERAL | MSG_TYPES | REMOTE 
-  mesh.setDebugMsgTypes(ERROR | MESH_STATUS);  
+  mesh.setDebugMsgTypes(ERROR);  
   mesh.init(MESH_PREFIX, MESH_PASSWORD, MESH_PORT);
 
   //Attach the mesh callbacks
