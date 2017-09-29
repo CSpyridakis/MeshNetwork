@@ -68,12 +68,14 @@ void setup() {
 }
 
 void loop() {
-  ESP.wdtFeed();
+  delay(0);
 }
 
 //Timer task that updates the mesh
 void meshUpdate_timer_task() {
+    noInterrupts();
     mesh.update();
+    interrupts();
 }
 
 //Timer tasks that gets and stores locally the sensor readings.
@@ -135,7 +137,6 @@ void broadcastReadings(){
   }
   mesh.sendBroadcast(msg);
   Serial.println(msg);
-  Serial.flush();
 }
 
 //This method SAVES locally the sensor results.
