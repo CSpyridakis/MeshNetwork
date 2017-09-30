@@ -4,26 +4,28 @@
 //  1 -> DHT-11
 //  2 -> LDR
 //  3 -> MQ-135
-#define SENSOR_NO 2
+#define SENSOR_NO 3
 #define ANALOGPIN A0
-#define DHTPin    12 //GPIO 12
+#define DHTPin    12              //GPIO 12
 #define DHTTYPE   DHT11
-#define LED       5             // GPIO number of connected LED.
+#define TIMER0_INTERRUPT_PIN 16   //GPIO 16. Interrupt attached. Also the Built in led pin.
+#define CPU_SEC   80000000L       //80MHz -> 1 sec
 
 //Mesh vars
 #define   MESH_UPDATE_INTERVAL    100L          // microseconds between each broadcast
-#define   SENSOR_UPDATE_INTERVAL  100L         // microseconds between each sensor update
-#define   BROADCAST_INTERVAL      100L         // microseconds between each broadcast
+#define   SENSOR_UPDATE_INTERVAL  1000L         // microseconds between each sensor update
+#define   BROADCAST_INTERVAL      5             // seconds between each broadcast
 
 #define   MESH_PREFIX     "mesh"
 #define   MESH_PASSWORD   "12345678"
 #define   MESH_PORT       5555
 
+//The mesh handler object.
 easyMesh  mesh;   
 
+//Timers used in several tasks such as mesh maintenance and sensor value broadcasts.
 os_timer_t meshUpdateTimer;   //Maintenance mesh network tasks
 os_timer_t readingsTimer;     //Readings from sensor (locally)
-os_timer_t broadcastTimer;    //Broadcast local sensor values.
 
 //*********************** DHT 11 ****************************
 // Reading temperature or humidity takes about 250 milliseconds!
@@ -36,6 +38,7 @@ os_timer_t broadcastTimer;    //Broadcast local sensor values.
 // Connect a 10K resistor from pin 2 (data) to pin 1 (power) of the sensor
 DHT dht(DHTPin, DHTTYPE);
 volatile float DHT_temperature,DHT_heatIndex,DHT_humidity;
+volatile bool toggle;
 
 //*********************** MQ-135 ****************************
 //A gas sensor.Needs about an hour of use to produce valid readings
@@ -45,12 +48,10 @@ volatile int gasVal;
 //*********************** LDR photoresistor *****************
 volatile int LDRval;
 
-
-
 void setup() {
   Serial.begin(115200);
-  pinMode(LED, OUTPUT);
- 
+  pinMode(TIMER0_INTERRUPT_PIN, OUTPUT);
+
   switch(SENSOR_NO){  //Initialize the correct sensors. 
     case 1:
       dht.begin();
@@ -69,31 +70,44 @@ void setup() {
 
   vars_init();
   timers_init();
-  ESP.wdtFeed();
+
+  //Attach the interrupt routine to timer0 and timer1.
+  //Timer1 does NOT work for some reason.
+  noInterrupts();
+  timer0_isr_init();
+  timer0_attachInterrupt(timer0_ISR);
+  timer0_write(ESP.getCycleCount() + CPU_SEC);
+  timer1_isr_init();
+  timer1_attachInterrupt(timer1_ISR);
+  timer1_write(ESP.getCycleCount() + CPU_SEC);
+  interrupts();
 }
 
 void loop() {
-  ESP.wdtFeed();
-  delay(0);
+  delay(0);   //Prevent watchdog from biting.
+}
+
+void timer0_ISR () {
+  timer0_write(ESP.getCycleCount() + BROADCAST_INTERVAL * CPU_SEC); //Rearm the hardware timer.
+  digitalWrite(TIMER0_INTERRUPT_PIN,LOW);//Turn ON the LED
+  broadcastReadings();
+  digitalWrite(TIMER0_INTERRUPT_PIN,HIGH);//Turn OFF the LED
+}
+
+void timer1_ISR () {
+  timer0_write(ESP.getCycleCount() + BROADCAST_INTERVAL * CPU_SEC); //Rearm the hardware timer.
+  Serial.println("Timer1 works");
 }
 
 //Timer task that updates the mesh
 void meshUpdate_timer_task() {
     mesh.update();
-    ESP.wdtFeed();
 }
 
 //Timer tasks that gets and stores locally the sensor readings.
 void getReadings_timer_task() {
     getReadings();
-    ESP.wdtFeed();
-} 
-
-//Timer tasks that broadcasts the sensor readings.
-void broadcastReadings_timer_task() {
-    broadcastReadings();
-    ESP.wdtFeed();
-} 
+}
 
 //Init the sensor variables in case of a premature broadcast.
 void vars_init(){
@@ -102,6 +116,7 @@ void vars_init(){
   DHT_humidity = 0;
   gasVal = 0;
   LDRval = 0;
+  toggle = false;
 }
 
 //Disarms,attaches callbacks and finally arms the timers.
@@ -109,28 +124,22 @@ void vars_init(){
 void timers_init() {
     os_timer_disarm(&meshUpdateTimer);
     os_timer_disarm(&readingsTimer);
-    os_timer_disarm(&broadcastTimer);
 
     os_timer_setfn(&meshUpdateTimer,(os_timer_func_t *) meshUpdate_timer_task, NULL); //Schedule the tasks
     os_timer_setfn(&readingsTimer,(os_timer_func_t *) getReadings_timer_task, NULL);
-    os_timer_setfn(&broadcastTimer,(os_timer_func_t *) broadcastReadings_timer_task, NULL);
 
     //If the 3rd arg is true then the task is executed periodically.
     os_timer_arm(&meshUpdateTimer, MESH_UPDATE_INTERVAL, true); 
     os_timer_arm(&readingsTimer, SENSOR_UPDATE_INTERVAL, true);
-    os_timer_arm(&broadcastTimer, BROADCAST_INTERVAL, true);
-    ESP.wdtFeed();
 }
 
 void receivedCallback(uint32_t from, String &msg) {
   Serial.printf("Received from %d : %s\n", from, msg.c_str());
-  ESP.wdtFeed();
 }
 
 void newConnectionCallback(bool adopt) {
   Serial.printf("New Connection, adopt=%d\n", adopt);
   Serial.printf("Connection count: %d\n", mesh.connectionCount() );
-  ESP.wdtFeed();
 }
 
 //Broadcasts the existing values of the sensor(s) produced by getReadings().
@@ -154,7 +163,6 @@ void broadcastReadings(){
   }
   mesh.sendBroadcast(msg);
   Serial.println(msg);
-  ESP.wdtFeed();
 }
 
 //This method SAVES locally the sensor results.
@@ -175,6 +183,4 @@ void getReadings(){
       default:
         break;
     }
-    ESP.wdtFeed();
 }
-
