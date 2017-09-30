@@ -1,16 +1,19 @@
 #include "easyMesh.h"
 #include <DHT.h>
 
-#define SENSOR_NO 3
+//  1 -> DHT-11
+//  2 -> LDR
+//  3 -> MQ-135
+#define SENSOR_NO 2
 #define ANALOGPIN A0
 #define DHTPin    12 //GPIO 12
 #define DHTTYPE   DHT11
 #define LED       5             // GPIO number of connected LED.
 
 //Mesh vars
-#define   MESH_UPDATE_INTERVAL    1000L          // microseconds between each broadcast
-#define   SENSOR_UPDATE_INTERVAL  1000L         // microseconds between each sensor update
-#define   BROADCAST_INTERVAL      1000L         // microseconds between each broadcast
+#define   MESH_UPDATE_INTERVAL    100L          // microseconds between each broadcast
+#define   SENSOR_UPDATE_INTERVAL  100L         // microseconds between each sensor update
+#define   BROADCAST_INTERVAL      100L         // microseconds between each broadcast
 
 #define   MESH_PREFIX     "mesh"
 #define   MESH_PASSWORD   "12345678"
@@ -32,15 +35,15 @@ os_timer_t broadcastTimer;    //Broadcast local sensor values.
 // Connect pin 4 (on the right) of the sensor to GROUND
 // Connect a 10K resistor from pin 2 (data) to pin 1 (power) of the sensor
 DHT dht(DHTPin, DHTTYPE);
-float DHT_temperature,DHT_heatIndex,DHT_humidity;
+volatile float DHT_temperature,DHT_heatIndex,DHT_humidity;
 
 //*********************** MQ-135 ****************************
 //A gas sensor.Needs about an hour of use to produce valid readings
-int gasVal;
+volatile int gasVal;
 
 
 //*********************** LDR photoresistor *****************
-int LDRval;
+volatile int LDRval;
 
 
 
@@ -57,38 +60,53 @@ void setup() {
   }
   
   // ERROR | MESH_STATUS | CONNECTION | SYNC | COMMUNICATION | GENERAL | MSG_TYPES | REMOTE 
-  mesh.setDebugMsgTypes(ERROR);  
+  mesh.setDebugMsgTypes(ERROR | MESH_STATUS);  
   mesh.init(MESH_PREFIX, MESH_PASSWORD, MESH_PORT);
 
   //Attach the mesh callbacks
   mesh.setReceiveCallback(&receivedCallback);
   mesh.setNewConnectionCallback(&newConnectionCallback);
 
+  vars_init();
   timers_init();
+  ESP.wdtFeed();
 }
 
 void loop() {
+  ESP.wdtFeed();
   delay(0);
 }
 
 //Timer task that updates the mesh
 void meshUpdate_timer_task() {
     mesh.update();
+    ESP.wdtFeed();
 }
 
 //Timer tasks that gets and stores locally the sensor readings.
 void getReadings_timer_task() {
     getReadings();
+    ESP.wdtFeed();
 } 
 
 //Timer tasks that broadcasts the sensor readings.
 void broadcastReadings_timer_task() {
     broadcastReadings();
+    ESP.wdtFeed();
 } 
+
+//Init the sensor variables in case of a premature broadcast.
+void vars_init(){
+  DHT_temperature = 0;
+  DHT_heatIndex = 0;
+  DHT_humidity = 0;
+  gasVal = 0;
+  LDRval = 0;
+}
 
 //Disarms,attaches callbacks and finally arms the timers.
 //Call this method in setup().
-void timers_init(void) {
+void timers_init() {
     os_timer_disarm(&meshUpdateTimer);
     os_timer_disarm(&readingsTimer);
     os_timer_disarm(&broadcastTimer);
@@ -101,15 +119,18 @@ void timers_init(void) {
     os_timer_arm(&meshUpdateTimer, MESH_UPDATE_INTERVAL, true); 
     os_timer_arm(&readingsTimer, SENSOR_UPDATE_INTERVAL, true);
     os_timer_arm(&broadcastTimer, BROADCAST_INTERVAL, true);
+    ESP.wdtFeed();
 }
 
 void receivedCallback(uint32_t from, String &msg) {
   Serial.printf("Received from %d : %s\n", from, msg.c_str());
+  ESP.wdtFeed();
 }
 
 void newConnectionCallback(bool adopt) {
   Serial.printf("New Connection, adopt=%d\n", adopt);
   Serial.printf("Connection count: %d\n", mesh.connectionCount() );
+  ESP.wdtFeed();
 }
 
 //Broadcasts the existing values of the sensor(s) produced by getReadings().
@@ -133,6 +154,7 @@ void broadcastReadings(){
   }
   mesh.sendBroadcast(msg);
   Serial.println(msg);
+  ESP.wdtFeed();
 }
 
 //This method SAVES locally the sensor results.
@@ -153,5 +175,6 @@ void getReadings(){
       default:
         break;
     }
+    ESP.wdtFeed();
 }
 
