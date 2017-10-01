@@ -118,7 +118,6 @@ void vars_init() {
     DHT_humidity = 0;
     gasVal = 0;
     LDRval = 0;
-    toggle = false;
 }
 
 /**
