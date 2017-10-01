@@ -6,48 +6,59 @@
 
 extern easyMesh* staticThis;
 
-// communications functions
-//***********************************************************************
-bool ICACHE_FLASH_ATTR easyMesh::sendMessage( meshConnectionType *conn, uint32_t destId, meshPackageType type, String &msg ) {
-    debugMsg( COMMUNICATION, "sendMessage(conn): conn-chipId=%d destId=%d type=%d msg=%s\n",
-                   conn->chipId, destId, (uint8_t)type, msg.c_str());
-    
-    String package = buildMeshPackage( destId, type, msg );
-    
-    return sendPackage( conn, package );
+/**
+ * Sends a message to a specific node given a connection object and an destination ID.
+ * @param type The mesh connection type.
+ * @param destId The destination id of the mesh node.
+ * @param type The mesh package type.
+ * @param msg The message to be sent over the network to the other node.
+ */
+bool ICACHE_FLASH_ATTR easyMesh::sendMessage(meshConnectionType *conn, uint32_t destId, meshPackageType type, String &msg) {
+    debugMsg(COMMUNICATION, "sendMessage(conn): conn-chipId=%d destId=%d type=%d msg=%s\n",
+             conn->chipId, destId, (uint8_t) type, msg.c_str());
+
+    String package = buildMeshPackage(destId, type, msg);
+    return sendPackage(conn, package);
 }
 
-//***********************************************************************
-bool ICACHE_FLASH_ATTR easyMesh::sendMessage( uint32_t destId, meshPackageType type, String &msg ) {
-    debugMsg( COMMUNICATION, "In sendMessage(destId): destId=%d type=%d, msg=%s\n",
-                   destId, type, msg.c_str());
- 
-    meshConnectionType *conn = findConnection( destId );
-    if ( conn != NULL ) {
-        return sendMessage( conn, destId, type, msg );
-    }
-    else {
-        debugMsg( ERROR, "In sendMessage(destId): findConnection( destId ) failed\n");
+/**
+ * Sends a message to a specific node given a destination ID.
+ * @param destId The destination id of the mesh node.
+ * @param type The mesh package type.
+ * @param msg The message to be sent over the network to the other node.
+ */
+bool ICACHE_FLASH_ATTR easyMesh::sendMessage(uint32_t destId, meshPackageType type, String &msg) {
+    debugMsg(COMMUNICATION, "In sendMessage(destId): destId=%d type=%d, msg=%s\n",
+             destId, type, msg.c_str());
+
+    meshConnectionType * conn = findConnection(destId);
+    if (conn != NULL) {
+        return sendMessage(conn, destId, type, msg);
+    } else {
+        debugMsg(ERROR, "In sendMessage(destId): findConnection( destId ) failed\n");
         return false;
     }
 }
 
-
-//***********************************************************************
+/**
+ * Sends a message to every node in the network.
+ * @param from The sender of
+ * @param type The mesh package type.
+ * @param msg The message to be sent over the network to the other node.
+ * @param exclude The types to exclude from the broadcast.
+ */
 bool ICACHE_FLASH_ATTR easyMesh::broadcastMessage(uint32_t from,
                                 meshPackageType type,
                                 String &msg,
                                 meshConnectionType *exclude ) {
-    
-    // send a message to every node on the mesh
-    
+
     if ( exclude != NULL )
         debugMsg( COMMUNICATION, "broadcastMessage(): from=%d type=%d, msg=%s exclude=%d\n",
                    from, type, msg.c_str(), exclude->chipId);
     else
         debugMsg( COMMUNICATION, "broadcastMessage(): from=%d type=%d, msg=%s exclude=NULL\n",
                    from, type, msg.c_str());
-    
+
     SimpleList<meshConnectionType>::iterator connection = _connections.begin();
     while ( connection != _connections.end() ) {
         if ( connection != exclude ) {
@@ -55,34 +66,42 @@ bool ICACHE_FLASH_ATTR easyMesh::broadcastMessage(uint32_t from,
         }
         connection++;
     }
-    return true; // hmmm... ought to be smarter than this!
+    return true;
 }
 
-//***********************************************************************
-bool ICACHE_FLASH_ATTR easyMesh::sendPackage( meshConnectionType *connection, String &package ) {
-    debugMsg( COMMUNICATION, "Sending to %d-->%s<--\n", connection->chipId, package.c_str() );
-    
-    if ( package.length() > 1400 )
-        debugMsg( ERROR, "sendPackage(): err package too long length=%d\n", package.length());
-    
-    if ( connection->sendReady == true ) {
-        sint8 errCode = espconn_send( connection->esp_conn, (uint8*)package.c_str(), package.length() );
+/**
+ * Send a package to a specific connection.
+ * @param connection The connection via which the package will be sent.
+ * @param package The package to send.
+ */
+bool ICACHE_FLASH_ATTR easyMesh::sendPackage(meshConnectionType *connection, String &package) {
+    debugMsg(COMMUNICATION, "Sending to %d-->%s<--\n", connection->chipId, package.c_str());
+
+    if (package.length() > 1400)
+        debugMsg(ERROR, "sendPackage(): err package too long length=%d\n", package.length());
+
+    if (connection->sendReady) {
+        sint8 errCode = espconn_send(connection->esp_conn, (uint8 *) package.c_str(), package.length());
         connection->sendReady = false;
-        
-        if ( errCode == 0 ) {
+
+        if (errCode == 0) {
             return true;
-        }
-        else {
-            debugMsg( ERROR, "sendPackage(): espconn_send Failed err=%d\n", errCode );
+        } else {
+            debugMsg(ERROR, "sendPackage(): espconn_send Failed err=%d\n", errCode);
             return false;
         }
-    }
-    else {
-        connection->sendQueue.push_back( package );
+    } else {
+        connection->sendQueue.push_back(package);
     }
 }
 
-//***********************************************************************
+
+/**
+ * Creates a package for a specific node in the mesh network.
+ * @param destId The ID of the destination node.
+ * @param type The mesh package type of the package.
+ * @param msg The message to be sent in the package.
+ */
 String ICACHE_FLASH_ATTR easyMesh::buildMeshPackage( uint32_t destId, meshPackageType type, String &msg ) {
     debugMsg( GENERAL, "In buildMeshPackage(): msg=%s\n", msg.c_str() );
 

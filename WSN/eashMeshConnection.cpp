@@ -254,7 +254,7 @@ uint16_t ICACHE_FLASH_ATTR easyMesh::jsonSubConnCount( String& subConns ) {
     return count;
 }
 
-//***********************************************************************
+
 void ICACHE_FLASH_ATTR easyMesh::meshConnectedCb(void *arg) {
     staticThis->debugMsg( CONNECTION, "meshConnectedCb(): new meshConnection !!!\n");
     meshConnectionType newConn;
@@ -291,8 +291,6 @@ void ICACHE_FLASH_ATTR easyMesh::meshRecvCb(void *arg, char *data, unsigned shor
         staticThis->debugMsg( ERROR, "dropping this msg... see if we recover?\n");
         return;
     }
-
-
 
     DynamicJsonBuffer jsonBuffer( JSON_BUFSIZE );
     JsonObject& root = jsonBuffer.parseObject( data );
@@ -340,7 +338,10 @@ void ICACHE_FLASH_ATTR easyMesh::meshRecvCb(void *arg, char *data, unsigned shor
     return;
 }
 
-//***********************************************************************
+/**
+ * The control block responsible for popping a conn from sendQueue and sending a package.
+ * @param arg The espconn CB.
+ */
 void ICACHE_FLASH_ATTR easyMesh::meshSentCb(void *arg) {
     staticThis->debugMsg( GENERAL, "meshSentCb():\n");    //data sent successfully
     espconn *conn = (espconn*)arg;
@@ -355,17 +356,18 @@ void ICACHE_FLASH_ATTR easyMesh::meshSentCb(void *arg) {
         String package = *meshConnection->sendQueue.begin();
         meshConnection->sendQueue.pop_front();
         sint8 errCode = espconn_send( meshConnection->esp_conn, (uint8*)package.c_str(), package.length() );
-        //connection->sendReady = false;
-
         if ( errCode != 0 ) {
             staticThis->debugMsg( ERROR, "meshSentCb(): espconn_send Failed err=%d\n", errCode );
         }
-    }
-    else {
+    } else {
         meshConnection->sendReady = true;
     }
 }
-//***********************************************************************
+
+/**
+ * The control block responsible for disconnecting connections with different ports.
+ * @param arg The espconn CB.
+ */
 void ICACHE_FLASH_ATTR easyMesh::meshDisconCb(void *arg) {
     struct espconn *disConn = (espconn *)arg;
 
@@ -374,14 +376,11 @@ void ICACHE_FLASH_ATTR easyMesh::meshDisconCb(void *arg) {
     //test to see if this connection was on the STATION interface by checking the local port
     if ( disConn->proto.tcp->local_port == staticThis->_meshPort ) {
         staticThis->debugMsg( CONNECTION, "AP connection.  No new action needed. local_port=%d\n", disConn->proto.tcp->local_port);
-    }
-    else {
+    } else {
         staticThis->debugMsg( CONNECTION, "Station Connection! Find new node. local_port=%d\n", disConn->proto.tcp->local_port);
         // should start up automatically when station_status changes to IDLE
         wifi_station_disconnect();
     }
-
-    return;
 }
 
 //***********************************************************************
@@ -389,7 +388,10 @@ void ICACHE_FLASH_ATTR easyMesh::meshReconCb(void *arg, sint8 err) {
     staticThis->debugMsg( ERROR, "In meshReconCb(): err=%d\n", err );
 }
 
-//***********************************************************************
+/**
+ * The control block responsible for taking the neccessary action(s) for a given event.
+ * @param event The SystemEvent to check.
+ */
 void ICACHE_FLASH_ATTR easyMesh::wifiEventCb(System_Event_t *event) {
     switch (event->event) {
         case EVENT_STAMODE_CONNECTED:

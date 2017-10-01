@@ -1,6 +1,6 @@
 #include "easyMesh.h"
 #include <DHT.h>
-#include "myconstants.h"
+#include "meshConstants.h"
 
 /**
  * The DHT-11 sensor values. The values are retrieved and broadcast in different time intervals.
