@@ -11,14 +11,16 @@
 
 class timeSync {
 public:
-    uint32_t        times[TIME_SYNC_CYCLES];
-    int8_t          num = -1;
-    bool            adopt;
+    uint32_t times[TIME_SYNC_CYCLES];
+    int8_t num = -1;
+    bool adopt;
 
-    String buildTimeStamp( void );
-    bool processTimeStamp( String &str);
-    void calcAdjustment ( bool even );
+    String buildTimeStamp(void);
+
+    bool processTimeStamp(String &str);
+
+    void calcAdjustment(bool even);
 };
 
-#endif //   _MESH_SYNC_H_
+#endif
 

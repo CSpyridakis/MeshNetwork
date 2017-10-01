@@ -1,11 +1,3 @@
-//
-//  easyMeshComm.cpp
-//
-//
-//  Created by Bill Gray on 7/26/16.
-//
-//
-
 #include <Arduino.h>
 #include <ArduinoJson.h>
 #include <SimpleList.h>
@@ -93,13 +85,13 @@ bool ICACHE_FLASH_ATTR easyMesh::sendPackage( meshConnectionType *connection, St
 //***********************************************************************
 String ICACHE_FLASH_ATTR easyMesh::buildMeshPackage( uint32_t destId, meshPackageType type, String &msg ) {
     debugMsg( GENERAL, "In buildMeshPackage(): msg=%s\n", msg.c_str() );
-    
+
     DynamicJsonBuffer jsonBuffer( JSON_BUFSIZE );
     JsonObject& root = jsonBuffer.createObject();
     root["dest"] = destId;
     root["from"] = _chipId;
     root["type"] = (uint8_t)type;
-    
+
     switch( type ) {
         case NODE_SYNC_REQUEST:
         case NODE_SYNC_REPLY:
@@ -117,7 +109,7 @@ String ICACHE_FLASH_ATTR easyMesh::buildMeshPackage( uint32_t destId, meshPackag
         default:
             root["msg"] = msg;
     }
-    
+
     String ret;
     root.printTo( ret );
     return ret;

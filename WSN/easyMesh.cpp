@@ -14,7 +14,10 @@ extern "C" {
 easyMesh* staticThis;
 uint16_t  count = 0;
 
-
+/**
+ * Initializes the mesh network by reseting the wifi connection and assigning blank values to the mesh variables.
+ * Call in the setup phase of the project but ONLY ONCE.
+ */
 void ICACHE_FLASH_ATTR easyMesh::init( String prefix, String password, uint16_t port ) {
     // shut everything down, start with a blank slate.
     debugMsg( STARTUP, "init():\n",    wifi_station_set_auto_connect( 0 ));
@@ -62,5 +65,3 @@ bool ICACHE_FLASH_ATTR easyMesh::sendBroadcast( String &msg ) {
     debugMsg( COMMUNICATION, "sendBroadcast(): msg=%s\n", msg.c_str());
     broadcastMessage( _chipId, BROADCAST, msg );
 }
-
-

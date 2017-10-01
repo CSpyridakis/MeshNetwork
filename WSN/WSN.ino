@@ -1,186 +1,212 @@
 #include "easyMesh.h"
 #include <DHT.h>
+#include "myconstants.h"
 
-//  1 -> DHT-11
-//  2 -> LDR
-//  3 -> MQ-135
-#define SENSOR_NO 3
-#define ANALOGPIN A0
-#define DHTPin    12              //GPIO 12
-#define DHTTYPE   DHT11
-#define TIMER0_INTERRUPT_PIN 16   //GPIO 16. Interrupt attached. Also the Built in led pin.
-#define CPU_SEC   80000000L       //80MHz -> 1 sec
+/**
+ * The DHT-11 sensor values. The values are retrieved and broadcast in different time intervals.
+ * For more info on this sensor check {@see myconstants.h}.
+ * TODO consider changing from float to String or int.
+ */
+volatile float DHT_temperature, DHT_heatIndex, DHT_humidity;
 
-//Mesh vars
-#define   MESH_UPDATE_INTERVAL    100L          // microseconds between each broadcast
-#define   SENSOR_UPDATE_INTERVAL  1000L         // microseconds between each sensor update
-#define   BROADCAST_INTERVAL      5             // seconds between each broadcast
 
-#define   MESH_PREFIX     "mesh"
-#define   MESH_PASSWORD   "12345678"
-#define   MESH_PORT       5555
-
-//The mesh handler object.
-easyMesh  mesh;   
-
-//Timers used in several tasks such as mesh maintenance and sensor value broadcasts.
-os_timer_t meshUpdateTimer;   //Maintenance mesh network tasks
-os_timer_t readingsTimer;     //Readings from sensor (locally)
-
-//*********************** DHT 11 ****************************
-// Reading temperature or humidity takes about 250 milliseconds!
-// Sensor readings may also be up to 2 seconds 'old' (its a very slow sensor)
-// Connect pin 1 (on the left) of the sensor to +5V
-// NOTE: If using a board with 3.3V logic like an Arduino Due connect pin 1
-// to 3.3V instead of 5V!
-// Connect pin 2 of the sensor to whatever your DHTPIN is
-// Connect pin 4 (on the right) of the sensor to GROUND
-// Connect a 10K resistor from pin 2 (data) to pin 1 (power) of the sensor
-DHT dht(DHTPin, DHTTYPE);
-volatile float DHT_temperature,DHT_heatIndex,DHT_humidity;
-volatile bool toggle;
-
-//*********************** MQ-135 ****************************
-//A gas sensor.Needs about an hour of use to produce valid readings
+/**
+ * The MQ-135 gas sensor value. This sensor needs to be warmed up for about 15min before
+ * providing accurate results.
+ */
 volatile int gasVal;
 
 
-//*********************** LDR photoresistor *****************
+/**
+ * A photoresistor (or light-dependent resistor, LDR) value.
+ */
 volatile int LDRval;
 
+/***
+ * Runs only once before the first loop().
+ * Some sensors may need initialization.
+ * Some callbacks are attached to the mesh handler.
+ * Interrupts need to be off while attaching ISRs to hardware timers.
+ * Allowed debug types are:
+ * ERROR | MESH_STATUS | CONNECTION | SYNC | COMMUNICATION | GENERAL | MSG_TYPES | REMOTE
+ */
 void setup() {
-  Serial.begin(115200);
-  pinMode(TIMER0_INTERRUPT_PIN, OUTPUT);
+    Serial.begin(115200);
+    pinMode(TIMER0_INTERRUPT_PIN, OUTPUT);
 
-  switch(SENSOR_NO){  //Initialize the correct sensors. 
-    case 1:
-      dht.begin();
-      break;
-    default:
-      break;
-  }
-  
-  // ERROR | MESH_STATUS | CONNECTION | SYNC | COMMUNICATION | GENERAL | MSG_TYPES | REMOTE 
-  mesh.setDebugMsgTypes(ERROR | MESH_STATUS);  
-  mesh.init(MESH_PREFIX, MESH_PASSWORD, MESH_PORT);
+    switch (SENSOR_NO) {
+        case 1:
+            dht.begin();
+            break;
+        default:
+            break;
+    }
 
-  //Attach the mesh callbacks
-  mesh.setReceiveCallback(&receivedCallback);
-  mesh.setNewConnectionCallback(&newConnectionCallback);
+    mesh.setDebugMsgTypes(ERROR | MESH_STATUS);
+    mesh.init(MESH_PREFIX, MESH_PASSWORD, MESH_PORT);
 
-  vars_init();
-  timers_init();
+    mesh.setReceiveCallback(&receivedCallback);
+    mesh.setNewConnectionCallback(&newConnectionCallback);
 
-  //Attach the interrupt routine to timer0 and timer1.
-  //Timer1 does NOT work for some reason.
-  noInterrupts();
-  timer0_isr_init();
-  timer0_attachInterrupt(timer0_ISR);
-  timer0_write(ESP.getCycleCount() + CPU_SEC);
-  timer1_isr_init();
-  timer1_attachInterrupt(timer1_ISR);
-  timer1_write(ESP.getCycleCount() + CPU_SEC);
-  interrupts();
+    vars_init();
+    timers_init();
+
+    noInterrupts();
+    timer0_isr_init();
+    timer0_attachInterrupt(timer0_ISR);
+    timer0_write(ESP.getCycleCount() + CPU_SEC);
+    timer1_isr_init();
+    timer1_attachInterrupt(timer1_ISR);
+    timer1_write(ESP.getCycleCount() + CPU_SEC);
+    interrupts();
 }
 
+/**
+ * This routine is executed repeatedly when every other task has completed.
+ * Always add a form of delay in the end (or yield) as the watchdog will bite otherwise.
+ * At the end of this routine several network and scheduling background tasks are executed
+ * so make sure to allow a loop() finish a few times per second.
+ */
 void loop() {
-  delay(0);   //Prevent watchdog from biting.
+    delay(0);
 }
 
-void timer0_ISR () {
-  timer0_write(ESP.getCycleCount() + BROADCAST_INTERVAL * CPU_SEC); //Rearm the hardware timer.
-  digitalWrite(TIMER0_INTERRUPT_PIN,LOW);//Turn ON the LED
-  broadcastReadings();
-  digitalWrite(TIMER0_INTERRUPT_PIN,HIGH);//Turn OFF the LED
+/**
+ * The timer0 Interrupt Service Routine. Must be very short.
+ * Executed every X seconds by setting the timer as X * CPU_SEC
+ * where CPU_SEC is 80.000.000 cycles (the esp8266 clock is 80MHz).
+ * This routine broadcasts the locally already calculated sensor values in the mesh.
+ * The built-in LED flashes while this routine is executed.
+ */
+void timer0_ISR() {
+    timer0_write(ESP.getCycleCount() + BROADCAST_INTERVAL * CPU_SEC);
+    digitalWrite(TIMER0_INTERRUPT_PIN, LOW);
+    broadcastReadings();
+    digitalWrite(TIMER0_INTERRUPT_PIN, HIGH);
 }
 
-void timer1_ISR () {
-  timer0_write(ESP.getCycleCount() + BROADCAST_INTERVAL * CPU_SEC); //Rearm the hardware timer.
-  Serial.println("Timer1 works");
+/**
+ * Same as timer0_ISR (above). Does not work atm as it has not been implemented at the
+ * official SDK.
+ * TODO investigate further this issue.
+ */
+void timer1_ISR() {
+    timer0_write(ESP.getCycleCount() + BROADCAST_INTERVAL * CPU_SEC); //Rearm the hardware timer.
+    Serial.println("Timer1 works");
 }
 
-//Timer task that updates the mesh
+/**
+ * Timer task that updates the mesh
+ */
 void meshUpdate_timer_task() {
     mesh.update();
 }
 
-//Timer tasks that gets and stores locally the sensor readings.
+/**
+ * Timer tasks that gets and stores locally the sensor readings.
+ */
 void getReadings_timer_task() {
     getReadings();
 }
 
-//Init the sensor variables in case of a premature broadcast.
-void vars_init(){
-  DHT_temperature = 0;
-  DHT_heatIndex = 0;
-  DHT_humidity = 0;
-  gasVal = 0;
-  LDRval = 0;
-  toggle = false;
+/**
+ * Initialize the sketch variables in case of a premature broadcast.
+ */
+void vars_init() {
+    DHT_temperature = 0;
+    DHT_heatIndex = 0;
+    DHT_humidity = 0;
+    gasVal = 0;
+    LDRval = 0;
+    toggle = false;
 }
 
-//Disarms,attaches callbacks and finally arms the timers.
-//Call this method in setup().
+/**
+ * Disarms,attaches callbacks and finally arms the timers.
+ * Call this method once.In os_timer_arm if the 3rd arg is true then the task is
+ * executed periodically.
+ */
 void timers_init() {
     os_timer_disarm(&meshUpdateTimer);
     os_timer_disarm(&readingsTimer);
 
-    os_timer_setfn(&meshUpdateTimer,(os_timer_func_t *) meshUpdate_timer_task, NULL); //Schedule the tasks
-    os_timer_setfn(&readingsTimer,(os_timer_func_t *) getReadings_timer_task, NULL);
+    os_timer_setfn(&meshUpdateTimer, (os_timer_func_t *) meshUpdate_timer_task, NULL);
+    os_timer_setfn(&readingsTimer, (os_timer_func_t *) getReadings_timer_task, NULL);
 
-    //If the 3rd arg is true then the task is executed periodically.
-    os_timer_arm(&meshUpdateTimer, MESH_UPDATE_INTERVAL, true); 
+    os_timer_arm(&meshUpdateTimer, MESH_UPDATE_INTERVAL, true);
     os_timer_arm(&readingsTimer, SENSOR_UPDATE_INTERVAL, true);
 }
 
+/**
+ * Set a callback routine for any messages that are addressed to this node.
+ * @param from the id of the original sender of the message
+ * @param msg a string that contains the message.The message can be anything.
+ * A JSON, some other text string, or binary data.
+ */
 void receivedCallback(uint32_t from, String &msg) {
-  Serial.printf("Received from %d : %s\n", from, msg.c_str());
+    Serial.printf("Received from %d : %s\n", from, msg.c_str());
 }
 
+/**
+ * This fires every time the local node makes a new connection.
+ * @param adopt a boolean value that indicates whether the mesh has determined to adopt
+ * the remote nodes timebase or not.  If `adopt == true`, then this node has adopted the remote
+ * node’s timebase.
+ */
 void newConnectionCallback(bool adopt) {
-  Serial.printf("New Connection, adopt=%d\n", adopt);
-  Serial.printf("Connection count: %d\n", mesh.connectionCount() );
+    Serial.printf("New Connection, adopt=%d\n", adopt);
+    Serial.printf("Connection count: %d\n", mesh.connectionCount());
 }
 
-//Broadcasts the existing values of the sensor(s) produced by getReadings().
-//Uses interrupts. DO NOT call inside an ISR, instead use getReadings to
-//obtain the values and then publish the results with this method.
-void broadcastReadings(){
-  String msg;
-  switch(SENSOR_NO){
-    case 1://DHT
-      msg = "C:"+String(DHT_temperature)+"  H:"+String(DHT_humidity) + "  HIC:"+String(DHT_heatIndex);
-      break;
-    case 2://LDR
-      msg = "LDR: " + String(LDRval); 
-      break;
-    case 3://MQ-135
-      msg = "Gas PPM: " + String(gasVal);
-      break;
-    default:
-      msg ="Error at publishValues default statement.";
-      break;
-  }
-  mesh.sendBroadcast(msg);
-  Serial.println(msg);
+/**
+ * Broadcasts the existing values of the sensor(s) produced by getReadings().
+ * Uses interrupts so DO NOT call inside an ISR, instead use getReadings to obtain
+ * the values and then publish the results with this method.
+ * case1 -> DHT11
+ * case2 -> Photoresistor
+ * case3 -> MQ135
+ */
+void broadcastReadings() {
+    String msg;
+    switch (SENSOR_NO) {
+        case 1:
+            msg = "C:" + String(DHT_temperature) + "  H:" + String(DHT_humidity) + "  HIC:" + String(DHT_heatIndex);
+            break;
+        case 2:
+            msg = "LDR: " + String(LDRval);
+            break;
+        case 3:
+            msg = "Gas PPM: " + String(gasVal);
+            break;
+        default:
+            msg = "Error at publishValues default statement.";
+            break;
+    }
+    mesh.sendBroadcast(msg);
+    Serial.println(msg);
 }
 
-//This method SAVES locally the sensor results.
-//Very-fast routine without interrupts, can be called by an ISR.
-void getReadings(){
-    switch(SENSOR_NO){
-      case 1: //DHT11
-         DHT_humidity = dht.readHumidity();
-         DHT_temperature = dht.readTemperature();
-         DHT_heatIndex = dht.computeHeatIndex(DHT_temperature, DHT_humidity, false); //Heat Index
-        break;
-      case 2: //Photoresistor
-        LDRval = analogRead(ANALOGPIN);
-        break;      
-      case 3: //MQ135
-        gasVal = analogRead(ANALOGPIN);
-        break;      
-      default:
-        break;
+/**
+ * This method SAVES locally the sensor results.
+ * Very-fast routine without interrupts, can be called by an ISR.
+ * case1 -> DHT11
+ * case2 -> Photoresistor
+ * case3 -> MQ135
+ */
+void getReadings() {
+    switch (SENSOR_NO) {
+        case 1:
+            DHT_humidity = dht.readHumidity();
+            DHT_temperature = dht.readTemperature();
+            DHT_heatIndex = dht.computeHeatIndex(DHT_temperature, DHT_humidity, false);
+            break;
+        case 2:
+            LDRval = analogRead(ANALOGPIN);
+            break;
+        case 3:
+            gasVal = analogRead(ANALOGPIN);
+            break;
+        default:
+            break;
     }
 }
