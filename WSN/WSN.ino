@@ -81,11 +81,15 @@ void loop() {
         case 2: //LDR
             if (LDRval < LDR_THRESHOLD) {
                 digitalWrite(TIMER0_INTERRUPT_PIN, LOW);
+            } else {
+                digitalWrite(TIMER0_INTERRUPT_PIN, HIGH);
             }
             break;
         case 3: //MQ-135
             if (gasVal > MQ135_THRESHOLD) {
                 digitalWrite(TIMER0_INTERRUPT_PIN, LOW);
+            } else {
+                digitalWrite(TIMER0_INTERRUPT_PIN, HIGH);
             }
             break;
         default:
