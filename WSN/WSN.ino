@@ -7,20 +7,20 @@
  * For more info on this sensor check {@see myconstants.h}.
  * TODO consider changing from float to String or int.
  */
-volatile float DHT_temperature, DHT_heatIndex, DHT_humidity;
+float DHT_temperature, DHT_heatIndex, DHT_humidity;
 
 
 /**
  * The MQ-135 gas sensor value. This sensor needs to be warmed up for about 15min before
- * providing accurate results.
+ * providing accurate results. The ADC is 10bit.
  */
-volatile int gasVal;
+uint16_t gasVal;
 
 
 /**
- * A photoresistor (or light-dependent resistor, LDR) value.
+ * A photoresistor (or light-dependent resistor, LDR) value. The ADC is 10bit.
  */
-volatile int LDRval;
+uint16_t LDRval;
 
 /***
  * Runs only once before the first loop().
@@ -42,7 +42,7 @@ void setup() {
             break;
     }
 
-    mesh.setDebugMsgTypes(ERROR | MESH_STATUS);
+    mesh.setDebugMsgTypes(ERROR | MESH_STATUS | CONNECTION);
     mesh.init(MESH_PREFIX, MESH_PASSWORD, MESH_PORT);
 
     mesh.setReceiveCallback(&receivedCallback);
@@ -55,6 +55,8 @@ void setup() {
     timer0_isr_init();
     timer0_attachInterrupt(timer0_ISR);
     timer0_write(ESP.getCycleCount() + CPU_SEC);
+
+    //timer1 hasn't been implemented in the current SDK version. Will remain offline until future releases.
     timer1_isr_init();
     timer1_attachInterrupt(timer1_ISR);
     timer1_write(ESP.getCycleCount() + CPU_SEC);
@@ -68,7 +70,28 @@ void setup() {
  * so make sure to allow a loop() finish a few times per second.
  */
 void loop() {
-    delay(0);
+    switch (SENSOR_NO) {
+        case 1: //DHT11
+            if (DHT_temperature >= DHT11_TEMPERATURE_THRESHOLD) {
+                digitalWrite(TIMER0_INTERRUPT_PIN, LOW);
+            } else {
+                digitalWrite(TIMER0_INTERRUPT_PIN, HIGH);
+            }
+            break;
+        case 2: //LDR
+            if (LDRval < LDR_THRESHOLD) {
+                digitalWrite(TIMER0_INTERRUPT_PIN, LOW);
+            }
+            break;
+        case 3: //MQ-135
+            if (gasVal > MQ135_THRESHOLD) {
+                digitalWrite(TIMER0_INTERRUPT_PIN, LOW);
+            }
+            break;
+        default:
+            Serial.println("Default case @loop() with " + SENSOR_NO);
+            break;
+    }
 }
 
 /**
@@ -80,9 +103,7 @@ void loop() {
  */
 void timer0_ISR() {
     timer0_write(ESP.getCycleCount() + BROADCAST_INTERVAL * CPU_SEC);
-    digitalWrite(TIMER0_INTERRUPT_PIN, LOW);
     broadcastReadings();
-    digitalWrite(TIMER0_INTERRUPT_PIN, HIGH);
 }
 
 /**
@@ -100,6 +121,7 @@ void timer1_ISR() {
  */
 void meshUpdate_timer_task() {
     mesh.update();
+    //Serial.println("Updating mesh...");
 }
 
 /**
@@ -107,6 +129,7 @@ void meshUpdate_timer_task() {
  */
 void getReadings_timer_task() {
     getReadings();
+    //Serial.println("Getting readings...");
 }
 
 /**
@@ -206,6 +229,7 @@ void getReadings() {
             gasVal = analogRead(ANALOGPIN);
             break;
         default:
+            Serial.println("Default case @getReadings() with " + SENSOR_NO);
             break;
     }
 }

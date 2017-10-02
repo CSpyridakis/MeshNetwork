@@ -16,6 +16,18 @@
 #define   MESH_PASSWORD   "12345678"
 #define   MESH_PORT       5555
 
+
+/**
+ * Thresholds for each sensor.
+ * On MQ135 start the buzzer.
+ * On LDR turn on the led strip.
+ * On DHT11 turn on the fan.
+ */
+uint16_t MQ135_THRESHOLD = 200;
+uint16_t LDR_THRESHOLD = 500;
+uint16_t DHT11_TEMPERATURE_THRESHOLD = 25;
+
+
 /**
  * The mesh handler. All actions such as Signal and Broadcast are invoked by this object.
  */
