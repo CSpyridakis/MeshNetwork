@@ -79,7 +79,7 @@ void setup() {
 void loop() {
     switch (SENSOR_NO) {
         case 1: //DHT11
-            if (DHT_temperature >= DHT11_TEMPERATURE_THRESHOLD) {
+            if (DHT_temperature > DHT11_TEMPERATURE_THRESHOLD) {
                 digitalWrite(TIMER0_INTERRUPT_PIN, LOW);
             } else {
                 digitalWrite(TIMER0_INTERRUPT_PIN, HIGH);
@@ -152,11 +152,11 @@ void getReadings_timer_task() {
  * Initialize the sketch variables in case of a premature broadcast.
  */
 void vars_init() {
-    DHT_temperature = DHT11_TEMPERATURE_THRESHOLD - 1;
+    DHT_temperature = DHT11_TEMPERATURE_THRESHOLD;
     DHT_heatIndex = 0;
     DHT_humidity = 0;
-    gasVal = MQ135_THRESHOLD - 1;
-    LDRval = LDR_THRESHOLD + 1;
+    gasVal = MQ135_THRESHOLD;
+    LDRval = LDR_THRESHOLD;
     broadcast_ready = false;
 }
 
