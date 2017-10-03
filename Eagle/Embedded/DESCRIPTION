@@ -6,9 +6,9 @@ Based on ESP-12E and ESP-12F (ESP8266)
 
 <h><u>Available Sensors:</u></h>
 <p>
-1) DHT 11 (Temp and Humidity) NOT<br>
-2) MQ-135 (Air Quality Sensor) NOT <br>
-3) Photoresistor NOT <br>
+1) DHT 11 (Temp and Humidity)<br>
+2) MQ-135 (Air Quality Sensor)  <br>
+3) Photoresistor <br>
 4) Motion Sensor NOT<br>
 5) Emergency Button NOT<br>
 6) Moisture Plant Sensor NOT
