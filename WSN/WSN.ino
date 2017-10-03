@@ -152,11 +152,11 @@ void getReadings_timer_task() {
  * Initialize the sketch variables in case of a premature broadcast.
  */
 void vars_init() {
-    DHT_temperature = 0;
+    DHT_temperature = DHT11_TEMPERATURE_THRESHOLD - 1;
     DHT_heatIndex = 0;
     DHT_humidity = 0;
-    gasVal = 0;
-    LDRval = 0;
+    gasVal = MQ135_THRESHOLD - 1;
+    LDRval = LDR_THRESHOLD + 1;
     broadcast_ready = false;
 }
 
