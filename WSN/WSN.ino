@@ -22,6 +22,12 @@ uint16_t gasVal;
  */
 uint16_t LDRval;
 
+/**
+ * Broadcast flag. When active it`s time to broadcast our data.
+ * Can be changes inside an ISR so it`s marked as volatile.
+ */
+volatile bool broadcast_ready;
+
 /***
  * Runs only once before the first loop().
  * Some sensors may need initialization.
@@ -67,7 +73,8 @@ void setup() {
  * This routine is executed repeatedly when every other task has completed.
  * Always add a form of delay in the end (or yield) as the watchdog will bite otherwise.
  * At the end of this routine several network and scheduling background tasks are executed
- * so make sure to allow a loop() finish a few times per second.
+ * so make sure to allow a loop() finish a few times per second. When the broadcast_ready is
+ * true transmit the local sensor values.
  */
 void loop() {
     switch (SENSOR_NO) {
@@ -93,8 +100,13 @@ void loop() {
             }
             break;
         default:
-            Serial.println("Default case @loop() with " + SENSOR_NO);
+            //Relay node, no sensors on board.
             break;
+    }
+
+    if (broadcast_ready) {
+        broadcastReadings();
+        broadcast_ready = false;
     }
 }
 
@@ -107,7 +119,7 @@ void loop() {
  */
 void timer0_ISR() {
     timer0_write(ESP.getCycleCount() + BROADCAST_INTERVAL * CPU_SEC);
-    broadcastReadings();
+    broadcast_ready = true;
 }
 
 /**
@@ -145,6 +157,7 @@ void vars_init() {
     DHT_humidity = 0;
     gasVal = 0;
     LDRval = 0;
+    broadcast_ready = false;
 }
 
 /**
@@ -205,8 +218,8 @@ void broadcastReadings() {
             msg = "Gas PPM: " + String(gasVal);
             break;
         default:
-            msg = "Error at publishValues default statement.";
-            break;
+            //Relay node, no sensors on board.
+            return;
     }
     mesh.sendBroadcast(msg);
     Serial.println(msg);
@@ -233,7 +246,7 @@ void getReadings() {
             gasVal = analogRead(ANALOGPIN);
             break;
         default:
-            Serial.println("Default case @getReadings() with " + SENSOR_NO);
-            break;
+            //Relay node.
+            return;
     }
 }

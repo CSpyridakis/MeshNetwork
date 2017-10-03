@@ -1,9 +1,16 @@
 #ifndef MESHNETWORK_MYCONSTANTS_H
 #define MESHNETWORK_MYCONSTANTS_H
 
-#define SENSOR_NO 3
+/**
+ * 0 -> Relay node, no sensors on board.
+ * 1 -> DHT11
+ * 2 -> LDR
+ * 3 -> MQ-135
+ */
+#define SENSOR_NO 0
+
 #define ANALOGPIN A0
-#define DHTPin    12              //GPIO 12
+#define DHTPin    12              //GPIO 12 or D6
 #define DHTTYPE   DHT11
 #define TIMER0_INTERRUPT_PIN 16   //GPIO 16. Interrupt attached. Also the Built in led pin.
 #define CPU_SEC   80000000L       //80MHz -> 1 sec
