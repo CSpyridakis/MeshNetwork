@@ -1,5 +1,5 @@
 #include "easyMesh.h"
-#include <DHT.h>
+#include <PietteTech_DHT.h>
 #include "meshConstants.h"
 
 /**
@@ -7,7 +7,7 @@
  * For more info on this sensor check {@see myconstants.h}.
  * TODO consider changing from float to String or int.
  */
-float DHT_temperature, DHT_heatIndex, DHT_humidity;
+float DHT_temperature, DHT_humidity;
 
 
 /**
@@ -40,14 +40,6 @@ void setup() {
     Serial.begin(115200);
     pinMode(TIMER0_INTERRUPT_PIN, OUTPUT);
 
-    switch (SENSOR_NO) {
-        case 1:
-            dht.begin();
-            break;
-        default:
-            break;
-    }
-
     mesh.setDebugMsgTypes(ERROR | MESH_STATUS | CONNECTION);
     mesh.init(MESH_PREFIX, MESH_PASSWORD, MESH_PORT);
 
@@ -62,7 +54,7 @@ void setup() {
     timer0_attachInterrupt(timer0_ISR);
     timer0_write(ESP.getCycleCount() + CPU_SEC);
 
-    //timer1 hasn't been implemented in the current SDK version. Will remain offline until future releases.
+    //timer1 hasn't been implemented in the current SDK version. Will remain offline for now.
     timer1_isr_init();
     timer1_attachInterrupt(timer1_ISR);
     timer1_write(ESP.getCycleCount() + CPU_SEC);
@@ -153,11 +145,12 @@ void getReadings_timer_task() {
  */
 void vars_init() {
     DHT_temperature = DHT11_TEMPERATURE_THRESHOLD;
-    DHT_heatIndex = 0;
     DHT_humidity = 0;
     gasVal = MQ135_THRESHOLD;
     LDRval = LDR_THRESHOLD;
     broadcast_ready = false;
+    acquirestatus = 0;
+    acquireresult = 0;
 }
 
 /**
@@ -209,7 +202,14 @@ void broadcastReadings() {
     String msg;
     switch (SENSOR_NO) {
         case 1:
-            msg = "C:" + String(DHT_temperature) + "  H:" + String(DHT_humidity) + "  HIC:" + String(DHT_heatIndex);
+            msg = "C:" + String(DHT_temperature) + "  H:" + String(DHT_humidity);
+            if (acquirestatus == 1) {
+                dht.reset();
+            }
+            if (!bDHTstarted) {
+                dht.acquire();// non blocking method
+                bDHTstarted = true;
+            }
             break;
         case 2:
             msg = "LDR: " + String(LDRval);
@@ -235,9 +235,17 @@ void broadcastReadings() {
 void getReadings() {
     switch (SENSOR_NO) {
         case 1:
-            DHT_humidity = dht.readHumidity();
-            DHT_temperature = dht.readTemperature();
-            DHT_heatIndex = dht.computeHeatIndex(DHT_temperature, DHT_humidity, false);
+            if (bDHTstarted) {
+                acquirestatus = dht.acquiring();
+                if (!acquirestatus) {
+                    acquireresult = dht.getStatus();
+                    if (acquireresult == 0) {
+                        DHT_temperature = dht.getCelsius();
+                        DHT_humidity = dht.getHumidity();
+                    }
+                    bDHTstarted = false;
+                }
+            }
             break;
         case 2:
             LDRval = analogRead(ANALOGPIN);

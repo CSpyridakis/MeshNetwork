@@ -7,7 +7,7 @@
  * 2 -> LDR
  * 3 -> MQ-135
  */
-#define SENSOR_NO 0
+#define SENSOR_NO 1
 
 #define ANALOGPIN A0
 #define DHTPin    12              //GPIO 12 or D6
@@ -52,6 +52,9 @@ os_timer_t meshUpdateTimer;
  */
 os_timer_t readingsTimer;
 
+//Convenient forward declaration.See next func.
+void dht_wrapper();
+
 /**
  * *********************** DHT 11 ****************************
  * Reading temperature or humidity takes about 250 milliseconds!
@@ -63,6 +66,21 @@ os_timer_t readingsTimer;
  * Connect pin 4 (on the right) of the sensor to GROUND
  * Connect a 10K resistor from pin 2 (data) to pin 1 (power) of the sensor
  */
-DHT dht(DHTPin, DHTTYPE);
+
+PietteTech_DHT dht(DHTPin, DHTTYPE, dht_wrapper);
+
+/** This wrapper is in charge of calling
+ *   must be defined like this for the lib work
+ */
+
+void dht_wrapper() {
+    dht.isrCallback();
+}
+
+/**
+ * DHT11 status.
+ */
+int acquirestatus,acquireresult;
+bool bDHTstarted;       // flag to indicate we started acquisition
 
 #endif
