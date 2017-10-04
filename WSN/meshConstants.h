@@ -64,7 +64,6 @@ void dht_wrapper();
  * to 3.3V instead of 5V!
  * Connect pin 2 of the sensor to whatever your DHTPIN is
  * Connect pin 4 (on the right) of the sensor to GROUND
- * Connect a 10K resistor from pin 2 (data) to pin 1 (power) of the sensor
  */
 
 PietteTech_DHT dht(DHTPin, DHTTYPE, dht_wrapper);
@@ -78,9 +77,9 @@ void dht_wrapper() {
 }
 
 /**
- * DHT11 status.
+ * DHT11 variables. We need to keep track of itw status, acquire results and locks.
  */
-int acquirestatus,acquireresult;
-bool bDHTstarted;       // flag to indicate we started acquisition
+int acquirestatus, acquireresult;
+bool bDHTstarted;
 
 #endif

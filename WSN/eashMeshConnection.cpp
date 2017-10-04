@@ -254,7 +254,9 @@ uint16_t ICACHE_FLASH_ATTR easyMesh::jsonSubConnCount( String& subConns ) {
     return count;
 }
 
-
+/**
+ * TODO continue...
+ */
 void ICACHE_FLASH_ATTR easyMesh::meshConnectedCb(void *arg) {
     staticThis->debugMsg( CONNECTION, "meshConnectedCb(): new meshConnection !!!\n");
     meshConnectionType newConn;

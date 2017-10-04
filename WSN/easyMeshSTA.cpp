@@ -2,20 +2,19 @@
 #include <SimpleList.h>
 
 extern "C" {
-#include "user_interface.h"
-#include "espconn.h"
+    #include "user_interface.h"
+    #include "espconn.h"
 }
 
 #include "easyMesh.h"
 
-
-
+/**
+ * A static copy of the mesh handler, kept for convenience.
+ */
 extern easyMesh* staticThis;
 
-// Station functions
-
 /**
- * Initializes the station by starting
+ * Initializes the station and starts the AP scan.
  */
 void ICACHE_FLASH_ATTR easyMesh::stationInit( void ) {
     debugMsg( STARTUP, "stationInit():\n");
@@ -64,7 +63,8 @@ void ICACHE_FLASH_ATTR easyMesh::manageStation( void ) {
 }
 
 /**
- *Changes the scan status to SCANNING iff its IDLE.
+ * Starts scanning if on station mode.
+ * Changes the scan status to SCANNING iff its IDLE.
  */
 void ICACHE_FLASH_ATTR easyMesh::startStationScan( void ) {
     debugMsg(GENERAL, "startStationScan():\n");
@@ -91,7 +91,8 @@ void ICACHE_FLASH_ATTR easyMesh::scanTimerCallback( void *arg ) {
 }
 
 /**
- * Scans for available APs and then selects the best one.
+ * Scans for available APs in the area with a matching prefix
+ * and then tries to connect to the best one.
  */
 void ICACHE_FLASH_ATTR easyMesh::stationScanCb(void *arg, STATUS status) {
     char ssid[32];

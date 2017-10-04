@@ -8,7 +8,8 @@ extern "C" {
 #include "easyMesh.h"
 
 /**
- * Initializes the AP and sets the required info such as SSID,port,GW and IP.
+ * Initialize the AP and set the required info such as SSID,port,GW and IP.
+ * Enforce WPA2-PSK auth and finally creates the TCP server.
  */
 void ICACHE_FLASH_ATTR easyMesh::apInit( void  ) {
     ip_addr ip, netmask;
@@ -39,7 +40,7 @@ void ICACHE_FLASH_ATTR easyMesh::apInit( void  ) {
     apConfig.authmode = AUTH_WPA2_PSK;
     apConfig.ssid_len = _mySSID.length();
     apConfig.beacon_interval = 100;
-    apConfig.max_connection = 4; // how many stations can connect to ESP8266 softAP at most.
+    apConfig.max_connection = 10;
 
     wifi_softap_set_config(&apConfig);// Set ESP8266 softap config .
     if (!wifi_softap_dhcps_start())
@@ -52,7 +53,8 @@ void ICACHE_FLASH_ATTR easyMesh::apInit( void  ) {
 }
 
 /**
- * Establishes the tcp server on the specific port.
+ * Creates the tcp server and sets its parameters, also registers the server control block
+ * and logs the results in the debug stream.
  */
 void ICACHE_FLASH_ATTR easyMesh::tcpServerInit(espconn &serverConn, esp_tcp &serverTcp, espconn_connect_callback connectCb, uint32 port) {
     

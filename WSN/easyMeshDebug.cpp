@@ -16,6 +16,11 @@ void easyMesh::setDebugMsgTypes(uint16_t newTypes) {
     Serial.printf("setDebugTypes 0x%x\n", types);
 }
 
+/**
+ *
+ * @param type The type of the message to be desplayed (see above).
+ * @param format The message to be desplayed.
+ */
 void easyMesh::debugMsg(debugType type, const char *format ...) {
     if (type & types) {  //Print only the message types set for output
         char str[200];

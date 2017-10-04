@@ -17,6 +17,9 @@ uint16_t  count = 0;
 /**
  * Initializes the mesh network by reseting the wifi connection and assigning blank values to the mesh variables.
  * Call in the setup phase of the project but ONLY ONCE.
+ * @param prefix The network prefix of every node in the mesh network.
+ * @param password The string required to be allowed access in the network.
+ * @param port The port this network will be built on. Used for TCP connections.
  */
 void ICACHE_FLASH_ATTR easyMesh::init( String prefix, String password, uint16_t port ) {
     // shut everything down, start with a blank slate.
@@ -47,20 +50,29 @@ void ICACHE_FLASH_ATTR easyMesh::init( String prefix, String password, uint16_t 
     debugMsg( GENERAL, "init(): tcp_max_con=%u\n", espconn_tcp_get_max_con() );
 }
 
-//***********************************************************************
+/**
+ * Starts the update sequence.
+ */
 void ICACHE_FLASH_ATTR easyMesh::update( void ) {
     manageStation();
     manageConnections();
     return;
 }
 
-//***********************************************************************
+/**
+ * Sends a message only once to a specific node in the mesh.
+ * @param destId The chip unique ID of the receiver node.
+ * @param msg The message to be sent.
+ */
 bool ICACHE_FLASH_ATTR easyMesh::sendSingle( uint32_t &destId, String &msg ){
     debugMsg( COMMUNICATION, "sendSingle(): dest=%d msg=%s\n", destId, msg.c_str());
     sendMessage( destId, SINGLE, msg );
 }
 
-//***********************************************************************
+/**
+ * Sends a message to every node in the network.
+ * @param msg The message to be broadcast.
+ */
 bool ICACHE_FLASH_ATTR easyMesh::sendBroadcast( String &msg ) {
     debugMsg( COMMUNICATION, "sendBroadcast(): msg=%s\n", msg.c_str());
     broadcastMessage( _chipId, BROADCAST, msg );

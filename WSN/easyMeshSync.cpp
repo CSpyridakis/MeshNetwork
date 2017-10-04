@@ -105,6 +105,9 @@ void ICACHE_FLASH_ATTR timeSync::calcAdjustment ( bool odd ) {
     timeAdjuster += adjustment;
 }
 
+/**
+ * Starts syncing with another node by sending its subs and changing the status to IN_PROGRESS.
+ */
 void ICACHE_FLASH_ATTR easyMesh::startNodeSync( meshConnectionType *conn ) {
     debugMsg( SYNC, "startNodeSync(): with %u\n", conn->chipId);
 
@@ -114,57 +117,62 @@ void ICACHE_FLASH_ATTR easyMesh::startNodeSync( meshConnectionType *conn ) {
     conn->nodeSyncStatus = IN_PROGRESS;
 }
 
-//***********************************************************************
+
+/**
+ * Takes action when a new sync request is made.
+ * After gathering all the info from the node who requested the sync
+ * we check to see if we are already connected somewhere and if so we drop the connection.
+ * We then check for a change in subconnections and resync them at the end of this method if needed.
+ * Finally, in case of a sync_request this node needs to send a sync_reply to its subs or in case of a
+ * sync_reply the node needs to reset its sync timer.
+ */
 void ICACHE_FLASH_ATTR easyMesh::handleNodeSync( meshConnectionType *conn, JsonObject& root ) {
-    debugMsg( SYNC, "handleNodeSync(): with %u\n", conn->chipId);
+    debugMsg(SYNC, "handleNodeSync(): with %u\n", conn->chipId);
 
-    meshPackageType type = (meshPackageType)(int)root["type"];
-    uint32_t        remoteChipId = (uint32_t)root["from"];
-    uint32_t        destId = (uint32_t)root["dest"];
-    bool            reSyncAllSubConnections = false;
+    meshPackageType type = (meshPackageType) (int) root["type"];
+    uint32_t remoteChipId = (uint32_t) root["from"];
+    uint32_t destId = (uint32_t) root["dest"];
+    bool reSyncAllSubConnections = false;
 
-    if( (destId == 0) && (findConnection( remoteChipId ) != NULL) ) {
-        // this is the first NODE_SYNC_REQUEST from a station
-        // is we are already connected drop this connection
-        debugMsg( SYNC, "handleNodeSync(): Already connected to node %d.  Dropping\n", conn->chipId);
-        closeConnection( conn );
+    if ((destId == 0) && (findConnection(remoteChipId) != NULL)) {
+        debugMsg(SYNC, "handleNodeSync(): Already connected to node %d.  Dropping\n", conn->chipId);
+        closeConnection(conn);
         return;
     }
 
-    if ( conn->chipId != remoteChipId ) {
-        debugMsg( SYNC, "handleNodeSync(): conn->chipId updated from %d to %d\n", conn->chipId, remoteChipId );
+    if (conn->chipId != remoteChipId) {
+        debugMsg(SYNC, "handleNodeSync(): conn->chipId updated from %d to %d\n", conn->chipId, remoteChipId);
         conn->chipId = remoteChipId;
 
     }
 
     // check to see if subs have changed.
     String inComingSubs = root["subs"];
-    if ( !conn->subConnections.equals( inComingSubs ) ) {  // change in the network
+    if (!conn->subConnections.equals(inComingSubs)) {  // change in the network
         reSyncAllSubConnections = true;
         conn->subConnections = inComingSubs;
     }
 
-    switch ( type ) {
-        case NODE_SYNC_REQUEST:
-        {
-            debugMsg( SYNC, "handleNodeSync(): valid NODE_SYNC_REQUEST %d sending NODE_SYNC_REPLY\n", conn->chipId );
-            String myOtherSubConnections = subConnectionJson( conn );
-            sendMessage( conn, _chipId, NODE_SYNC_REPLY, myOtherSubConnections );
+    switch (type) {
+        case NODE_SYNC_REQUEST: {
+            debugMsg(SYNC, "handleNodeSync(): valid NODE_SYNC_REQUEST %d sending NODE_SYNC_REPLY\n", conn->chipId);
+            String myOtherSubConnections = subConnectionJson(conn);
+            sendMessage(conn, _chipId, NODE_SYNC_REPLY, myOtherSubConnections);
             break;
         }
         case NODE_SYNC_REPLY:
-            debugMsg( SYNC, "handleNodeSync(): valid NODE_SYNC_REPLY from %d\n", conn->chipId );
+            debugMsg(SYNC, "handleNodeSync(): valid NODE_SYNC_REPLY from %d\n", conn->chipId);
             conn->nodeSyncRequest = 0;  //reset nodeSyncRequest Timer  ????
-            if ( conn->lastTimeSync == 0 )
-                startTimeSync( conn );
+            if (conn->lastTimeSync == 0)
+                startTimeSync(conn);
             break;
         default:
-            debugMsg( ERROR, "handleNodeSync(): weird type? %d\n", type );
+            debugMsg(ERROR, "handleNodeSync(): weird type? %d\n", type);
     }
 
-    if ( reSyncAllSubConnections == true ) {
+    if (reSyncAllSubConnections) {
         SimpleList<meshConnectionType>::iterator connection = _connections.begin();
-        while ( connection != _connections.end() ) {
+        while (connection != _connections.end()) {
             connection->nodeSyncStatus = NEEDED;
             connection++;
         }
@@ -173,7 +181,9 @@ void ICACHE_FLASH_ATTR easyMesh::handleNodeSync( meshConnectionType *conn, JsonO
     conn->nodeSyncStatus = COMPLETE;  // mark this connection nodeSync'd
 }
 
-//***********************************************************************
+/**
+ * Checks if timebase needs to be adopted and starts the time sync.
+ */
 void ICACHE_FLASH_ATTR easyMesh::startTimeSync( meshConnectionType *conn ) {
     debugMsg( SYNC, "startTimeSync(): with %d\n", conn->chipId );
 
@@ -183,8 +193,7 @@ void ICACHE_FLASH_ATTR easyMesh::startTimeSync( meshConnectionType *conn ) {
 
     conn->time.num = 0;
 
-    conn->time.adopt = adoptionCalc( conn ); // do I adopt the estblished time?
-    //   debugMsg( GENERAL, "startTimeSync(): remoteSubCount=%d adopt=%d\n", remoteSubCount, conn->time.adopt);
+    conn->time.adopt = adoptionCalc( conn ); // do I adopt the estblished time? See below
 
     String timeStamp = conn->time.buildTimeStamp();
     staticThis->sendMessage( conn, _chipId, TIME_SYNC, timeStamp );
@@ -192,21 +201,26 @@ void ICACHE_FLASH_ATTR easyMesh::startTimeSync( meshConnectionType *conn ) {
     conn->timeSyncStatus = IN_PROGRESS;
 }
 
-//***********************************************************************
-bool ICACHE_FLASH_ATTR easyMesh::adoptionCalc( meshConnectionType *conn ) {
-    // make the adoption calulation.  Figure out how many nodes I am connected to exclusive of this connection.
 
+/**
+ * Make the adoption calculation.
+ * Figure out how many nodes I am connected to and answer positively only if my subs are less than the remote subs.
+ */
+bool ICACHE_FLASH_ATTR easyMesh::adoptionCalc( meshConnectionType *conn ) {
     uint16_t mySubCount = connectionCount( conn );  //exclude this connection.
     uint16_t remoteSubCount = jsonSubConnCount( conn->subConnections );
 
-    bool ret = ( mySubCount > remoteSubCount ) ? false : true;
+    bool ret = mySubCount > remoteSubCount ? false : true;
 
     debugMsg( GENERAL, "adoptionCalc(): mySubCount=%d remoteSubCount=%d ret = %d\n", mySubCount, remoteSubCount, ret);
 
     return ret;
 }
 
-//***********************************************************************
+/**
+ * Update the timestamp of the connection.
+ * Find and flag all connections for re-timeSync
+ */
 void ICACHE_FLASH_ATTR easyMesh::handleTimeSync( meshConnectionType *conn, JsonObject& root ) {
 
     String timeStamp = root["msg"];
@@ -227,7 +241,6 @@ void ICACHE_FLASH_ATTR easyMesh::handleTimeSync( meshConnectionType *conn, JsonO
         if ( conn->time.adopt ) {
             conn->time.calcAdjustment( odd );
 
-            // flag all connections for re-timeSync
             SimpleList<meshConnectionType>::iterator connection = _connections.begin();
             while ( connection != _connections.end() ) {
                 if ( connection != conn ) {  // exclude this connection
