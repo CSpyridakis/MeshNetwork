@@ -39,6 +39,7 @@ volatile bool broadcast_ready;
 void setup() {
     Serial.begin(115200);
     pinMode(TIMER0_INTERRUPT_PIN, OUTPUT);
+    digitalWrite(TIMER0_INTERRUPT_PIN, LOW);
 
     mesh.setDebugMsgTypes(ERROR | MESH_STATUS | CONNECTION);
     mesh.init(MESH_PREFIX, MESH_PASSWORD, MESH_PORT);
@@ -71,24 +72,24 @@ void setup() {
 void loop() {
     switch (SENSOR_NO) {
         case 1: //DHT11
-            if (DHT_temperature > DHT11_TEMPERATURE_THRESHOLD) {
-                digitalWrite(TIMER0_INTERRUPT_PIN, LOW);
-            } else {
+            if (DHT_temperature >= DHT11_TEMPERATURE_THRESHOLD) {
                 digitalWrite(TIMER0_INTERRUPT_PIN, HIGH);
+            } else {
+                digitalWrite(TIMER0_INTERRUPT_PIN, LOW);
             }
             break;
         case 2: //LDR
             if (LDRval < LDR_THRESHOLD) {
-                digitalWrite(TIMER0_INTERRUPT_PIN, LOW);
-            } else {
                 digitalWrite(TIMER0_INTERRUPT_PIN, HIGH);
+            } else {
+                digitalWrite(TIMER0_INTERRUPT_PIN, LOW);
             }
             break;
         case 3: //MQ-135
             if (gasVal > MQ135_THRESHOLD) {
-                digitalWrite(TIMER0_INTERRUPT_PIN, LOW);
-            } else {
                 digitalWrite(TIMER0_INTERRUPT_PIN, HIGH);
+            } else {
+                digitalWrite(TIMER0_INTERRUPT_PIN, LOW);
             }
             break;
         default:
@@ -100,6 +101,8 @@ void loop() {
         broadcastReadings();
         broadcast_ready = false;
     }
+
+    yield();
 }
 
 /**
