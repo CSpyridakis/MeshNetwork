@@ -1,0 +1,230 @@
+n started @ 349135<--
+0x8	stationScanCb():-- > scan finished @  2472120 < --
+0x8		found : mesh1461612, -47dBm0x8	 MESH_PRE< ---0x8	
+0x8		found : TP-LINK_9088, -92dBm0x8	
+0x8		found : stamatakis, -75dBm0x8	
+0x8		found : OTE WiFi Fon, -77dBm0x8	
+0x8		found : COSMOTE-11A374, -72dBm0x8	
+0x8		found : COSMOTE-5148B4, -77dBm0x8	
+0x8		Found  1 nodes with _meshPrefix = "mesh"
+0x8	connectToBestAP():0x8	findConnection(1461612): did not find connection
+0x8	connectToBestAP(): Best AP is mesh1461612<---
+0x4	stationStatus Changed to STATION_CONNECTING
+0x8	wifiEventCb(): EVENT_STAMODE_CONNECTED ssid=mesh1461612
+0x4	stationStatus Changed to STATION_GOT_IP
+0x8	wifiEventCb(): EVENT_STAMODE_GOT_IP
+0x8	tcpConnect(): Got local IP=192.168.108.2
+0x8	tcpConnect(): Dest IP=192.168.108.1
+0x8	tcpConnect(): connecting type=16, state=0, local_ip=192.168.108.2, local_port=5486, remote_ip=192.168.108.1 remote_port=5555
+0x8	meshConnectedCb(): new meshConnection !!!
+0x8	meshConnectedCb(): we are STA, start nodeSync
+0x8	wifiEventCb(): EVENT_SOFTAPMODE_STACONNECTED
+0x8	meshConnectedCb(): new meshConnection !!!
+0x8	meshConnectedCb(): we are AP
+0x8	closeConnection(): conn-chipId=0
+0x8	meshDisconCb(): 0x8	AP connection.  No new action needed. local_port=5555
+0x8	wifiEventCb(): EVENT_SOFTAPMODE_STADISCONNECTED
+New Connection, adopt=1
+Connection count: 1
+Received from 1461612 : Gas PPM: 165
+Received from 1461612 : Gas PPM: 163
+Received from 1461612 : Gas PPM: 164
+Received from 1461612 : Gas PPM: 163
+Received from 1461612 : Gas PPM: 165
+Received from 1461612 : Gas PPM: 165
+Received from 1461612 : Gas PPM: 165
+Received from 1461612 : Gas PPM: 166
+Received from 1461612 : Gas PPM: 166
+Received from 1461612 : Gas PPM: 165
+Received from 1461612 : Gas PPM: 165
+Received from 1461612 : Gas PPM: 165
+Received from 1461612 : Gas PPM: 165
+Received from 1461612 : Gas PPM: 165
+Received from 1461612 : Gas PPM: 165
+Received from 1461612 : Gas PPM: 163
+Received from 1461612 : Gas PPM: 163
+0x8	meshDisconCb(): 0x8	Station Connection! Find new node. local_port=5486
+0x8	wifiEventCb(): EVENT_STAMODE_DISCONNECTED
+0x8	connectToBestAP():0x8	connectToBestAP(): no nodes left in list, rescanning
+0x4	stationStatus Changed to STATION_IDLE
+0x8	manageConnections(): dropping 1461612 ESPCONN_CLOSE
+0x8	closeConnection(): conn-chipId=1461612
+0x8	wifiEventCb(): EVENT_SOFTAPMODE_STACONNECTED
+0x8	meshConnectedCb(): new meshConnection !!!
+0x8	meshConnectedCb(): we are AP
+0x8	findConnection(1461612): did not find connection
+New Connection, adopt=1
+Connection count: 1
+Received from 1461612 : Gas PPM: 163
+0x8	wifiEventCb(): EVENT_SOFTAPMODE_STACONNECTED
+0x8	meshConnectedCb(): new meshConnection !!!
+0x8	meshConnectedCb(): we are AP
+0x8	findConnection(1808523): did not find connection
+New Connection, adopt=0
+Connection count: 2
+0x8	-->scan started @ 106300360<--
+Received from 1461612 : Gas PPM: 163
+0x8	stationScanCb():-- > scan finished @  108428719 < --
+0x8		found : mesh1461612, -48dBm0x8	 MESH_PRE< ---0x8	
+0x8		found : mesh1808523, -48dBm0x8	 MESH_PRE< ---0x8	
+0x8		found : TP-LINK_9088, -91dBm0x8	
+0x8		found : OTE WiFi Fon, -77dBm0x8	
+0x8		found : stamatakis, -77dBm0x8	
+0x8		found : COSMOTE-11A374, -74dBm0x8	
+0x8		found : COSMOTE-5148B4, -74dBm0x8	
+0x8		found : COSMOTE-3FA562, -95dBm0x8	
+0x8		Found  2 nodes with _meshPrefix = "mesh"
+0x8	connectToBestAP():0x8	connectToBestAP(): no nodes left in list, rescanning
+Received from 1808523 : LDR: 257
+Received from 1461612 : Gas PPM: 166
+Received from 1808523 : LDR: 263
+Received from 1461612 : Gas PPM: 165
+0x8	-->scan started @ 118463702<--
+Received from 1808523 : LDR: 311
+0x8	stationScanCb():-- > scan finished @  120590649 < --
+0x8		found : mesh1808523, -47dBm0x8	 MESH_PRE< ---0x8	
+0x8		found : mesh1461612, -51dBm0x8	 MESH_PRE< ---0x8	
+0x8		found : OTE WiFi Fon, -77dBm0x8	
+0x8		found : TP-LINK_9088, -92dBm0x8	
+0x8		found : stamatakis, -78dBm0x8	
+0x8		found : COSMOTE-11A374, -86dBm0x8	
+0x8		Found  2 nodes with _meshPrefix = "mesh"
+0x8	connectToBestAP():0x8	connectToBestAP(): no nodes left in list, rescanning
+Received from 1461612 : Gas PPM: 164
+Received from 1808523 : LDR: 317
+Received from 1461612 : Gas PPM: 164
+Received from 1808523 : LDR: 317
+0x8	-->scan started @ 130618708<--
+0x8	stationScanCb():-- > scan finished @  132743999 < --
+0x8		found : mesh1461612, -58dBm0x8	 MESH_PRE< ---0x8	
+0x8		found : mesh1808523, -45dBm0x8	 MESH_PRE< ---0x8	
+0x8		found : TP-LINK_9088, -93dBm0x8	
+0x8		found : OTE WiFi Fon, -75dBm0x8	
+0x8		found : stamatakis, -75dBm0x8	
+0x8		found : COSMOTE-11A374, -73dBm0x8	
+0x8		found : French_Bulldog_Area, -90dBm0x8	
+0x8		Found  2 nodes with _meshPrefix = "mesh"
+0x8	connectToBestAP():0x8	connectToBestAP(): no nodes left in list, rescanning
+Received from 1461612 : Gas PPM: 164
+Received from 1808523 : LDR: 321
+Received from 1461612 : Gas PPM: 163
+Received from 1808523 : LDR: 256
+Received from 1461612 : Gas PPM: 164
+0x8	-->scan started @ 142775945<--
+0x8	manageConnections(): dropping 1808523 NODE_TIMEOUT last=140481065 node=143576025
+0x8	closeConnection(): conn-chipId=1808523
+0x8	meshDisconCb(): 0x8	AP connection.  No new action needed. local_port=5555
+0x8	stationScanCb():-- > scan finished @  144902429 < --
+0x8		found : mesh1461612, -47dBm0x8	 MESH_PRE< ---0x8	
+0x8		found : TP-LINK_9088, -92dBm0x8	
+0x8		found : stamatakis, -79dBm0x8	
+0x8		found : COSMOTE-11A374, -74dBm0x8	
+0x8		found : COSMOTE-3FA562, -92dBm0x8	
+0x8		found : COSMOTE-5148B4, -86dBm0x8	
+0x8		Found  1 nodes with _meshPrefix = "mesh"
+0x8	connectToBestAP():0x8	connectToBestAP(): no nodes left in list, rescanning
+Received from 1461612 : Gas PPM: 165
+Received from 1461612 : Gas PPM: 163
+0x8	-->scan started @ 154929334<--
+Received from 1461612 : Gas PPM: 163
+0x8	stationScanCb():-- > scan finished @  157054585 < --
+0x8		found : mesh1461612, -46dBm0x8	 MESH_PRE< ---0x8	
+0x8		found : TP-LINK_9088, -94dBm0x8	
+0x8		found : stamatakis, -76dBm0x8	
+0x8		found : OTE WiFi Fon, -76dBm0x8	
+0x8		found : COSMOTE-11A374, -75dBm0x8	
+0x8		found : COSMOTE-5148B4, -83dBm0x8	
+0x8		found : COSMOTE-3FA562, -92dBm0x8	
+0x8		Found  1 nodes with _meshPrefix = "mesh"
+0x8	connectToBestAP():0x8	connectToBestAP(): no nodes left in list, rescanning
+Received from 1461612 : Gas PPM: 163
+Received from 1461612 : Gas PPM: 164
+0x8	-->scan started @ 167084728<--
+0x8	stationScanCb():-- > scan finished @  169211229 < --
+0x8		found : mesh1461612, -49dBm0x8	 MESH_PRE< ---0x8	
+0x8		found : TP-LINK_9088, -93dBm0x8	
+0x8		found : stamatakis, -76dBm0x8	
+0x8		found : OTE WiFi Fon, -75dBm0x8	
+0x8		found : COSMOTE-11A374, -75dBm0x8	
+0x8		found : COSMOTE-5148B4, -85dBm0x8	
+0x8		found : COSMOTE-3FA562, -92dBm0x8	
+0x8		Found  1 nodes with _meshPrefix = "mesh"
+0x8	connectToBestAP():0x8	connectToBestAP(): no nodes left in list, rescanning
+Received from 1461612 : Gas PPM: 164
+Received from 1461612 : Gas PPM: 163
+0x8	-->scan started @ 179241403<--
+0x8	stationScanCb():-- > scan finished @  181366979 < --
+0x8		found : mesh1461612, -48dBm0x8	 MESH_PRE< ---0x8	
+0x8		found : TP-LINK_9088, -92dBm0x8	
+0x8		found : stamatakis, -75dBm0x8	
+0x8		found : OTE WiFi Fon, -74dBm0x8	
+0x8		found : mesh16445372, -52dBm0x8	 MESH_PRE< ---0x8	
+0x8		found : COSMOTE-11A374, -75dBm0x8	
+0x8		found : COSMOTE-5148B4, -87dBm0x8	
+0x8		found : COSMOTE-3FA562, -95dBm0x8	
+0x8		Found  2 nodes with _meshPrefix = "mesh"
+0x8	connectToBestAP():0x8	findConnection(16445372): did not find connection
+0x8	connectToBestAP(): Best AP is mesh16445372<---
+0x4	stationStatus Changed to STATION_CONNECTING
+0x8	manageConnections(): dropping 1461612 NODE_TIMEOUT last=180428708 node=183490327
+0x8	closeConnection(): conn-chipId=1461612
+0x8	meshDisconCb(): 0x8	AP connection.  No new action needed. local_port=5555
+0x8	wifiEventCb(): EVENT_SOFTAPMODE_STADISCONNECTED
+0x8	wifiEventCb(): EVENT_STAMODE_CONNECTED ssid=mesh16445372
+0x8	wifiEventCb(): EVENT_STAMODE_GOT_IP
+0x8	tcpConnect(): Got local IP=192.168.188.2
+0x8	tcpConnect(): Dest IP=192.168.188.1
+0x8	tcpConnect(): connecting type=16, state=0, local_ip=192.168.188.2, local_port=34443, remote_ip=192.168.188.1 remote_port=5555
+0x8	meshConnectedCb(): new meshConnection !!!
+0x8	meshConnectedCb(): we are STA, start nodeSync
+0x4	stationStatus Changed to STATION_GOT_IP
+0x8	jsonSubConnCount(): leaving count=1
+0x8	jsonSubConnCount(): leaving count=1
+New Connection, adopt=1
+0x8	jsonSubConnCount(): leaving count=1
+Connection count: 2
+Received from 16445372 : Gas PPM: 163
+Received from 16445372 : C:24.00  H:55.00
+Received from 16445372 : Gas PPM: 162
+Received from 16445372 : C:24.00  H:55.00
+Received from 16445372 : Gas PPM: 165
+Received from 16445372 : C:24.00  H:55.00
+Received from 16445372 : Gas PPM: 165
+Received from 16445372 : C:24.00  H:55.00
+0x8	manageConnections(): dropping 16445372 NODE_TIMEOUT last=205880405 node=208881214
+0x8	closeConnection(): conn-chipId=16445372
+0x8	meshDisconCb(): 0x8	Station Connection! Find new node. local_port=34443
+0x8	wifiEventCb(): EVENT_STAMODE_DISCONNECTED
+0x8	connectToBestAP():0x8	connectToBestAP(): no nodes left in list, rescanning
+0x4	stationStatus Changed to STATION_IDLE
+0x8	-->scan started @ 218900554<--
+0x8	stationScanCb():-- > scan finished @  221025047 < --
+0x8		found : stamatakis, -76dBm0x8	
+0x8		found : OTE WiFi Fon, -69dBm0x8	
+0x8		found : TP-LINK_9088, -92dBm0x8	
+0x8		found : COSMOTE-11A374, -75dBm0x8	
+0x8		found : COSMOTE-5148B4, -88dBm0x8	
+0x8		found : COSMOTE-3FA562, -91dBm0x8	
+0x8		Found  0 nodes with _meshPrefix = "mesh"
+0x8	connectToBestAP():0x8	connectToBestAP(): no nodes left in list, rescanning
+0x8	wifiEventCb(): EVENT_SOFTAPMODE_STACONNECTED
+0x8	meshConnectedCb(): new meshConnection !!!
+0x8	meshConnectedCb(): we are AP
+0x8	findConnection(1461612): did not find connection
+New Connection, adopt=1
+Connection count: 1
+Received from 1461612 : Gas PPM: 164
+0x8	-->scan started @ 231050502<--
+0x8	stationScanCb():-- > scan finished @  233175897 < --
+0x8		found : mesh1461612, -51dBm0x8	 MESH_PRE< ---0x8	
+0x8		found : TP-LINK_9088, -93dBm0x8	
+0x8		found : stamatakis, -80dBm0x8	
+0x8		found : COSMOTE-11A374, -78dBm0x8	
+0x8		found : French_Bulldog_Area, -94dBm0x8	
+0x8		Found  1 nodes with _meshPrefix = "mesh"
+0x8	connectToBestAP():0x8	connectToBestAP(): no nodes left in list, rescanning
+0x8	manageConnections(): dropping 1461612 NODE_TIMEOUT last=230385932 node=233398325
+0x8	closeConnection(): conn-chipId=1461612
+0x8	meshDisconCb(): 0x8	AP connection.  No new action needed. local_port=5555
+0x8	wifiEventCb(): EVENT_SOFTAPMODE_STADISCONNECTED
+
