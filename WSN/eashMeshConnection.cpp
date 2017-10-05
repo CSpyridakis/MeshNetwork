@@ -224,7 +224,11 @@ uint16_t ICACHE_FLASH_ATTR easyMesh::connectionCount( meshConnectionType *exclud
     return count;
 }
 
-//***********************************************************************
+
+/**
+* Returns the number of active subconnections.
+* @param The JSON array with the subs.
+*/
 uint16_t ICACHE_FLASH_ATTR easyMesh::jsonSubConnCount( String& subConns ) {
     debugMsg( GENERAL, "jsonSubConnCount(): subConns=%s\n", subConns.c_str() );
 
@@ -259,7 +263,9 @@ uint16_t ICACHE_FLASH_ATTR easyMesh::jsonSubConnCount( String& subConns ) {
 }
 
 /**
- * TODO continue...
+ * This control block is sent by a new connection in the network.
+ * All the neccessary control blocks are attached here (recv,sent,recon...). 
+ * @param arg The new connection,a meshConnectionType obj.
  */
 void ICACHE_FLASH_ATTR easyMesh::meshConnectedCb(void *arg) {
     staticThis->debugMsg( CONNECTION, "meshConnectedCb(): new meshConnection !!!\n");
@@ -286,7 +292,12 @@ void ICACHE_FLASH_ATTR easyMesh::meshConnectedCb(void *arg) {
     staticThis->debugMsg( GENERAL, "meshConnectedCb(): leaving\n");
 }
 
-//***********************************************************************
+/**
+* This control block is sent by a connection that wants to transmit something.
+* A JSON buffer is allocated to hold the incoming message.
+* Finally depending on the type of the message (SYNC,REPLY..) the neccessary actions are made.
+* @param arg The connection,an espconn obj.
+*/
 void ICACHE_FLASH_ATTR easyMesh::meshRecvCb(void *arg, char *data, unsigned short length) {
     meshConnectionType *receiveConn = staticThis->findConnection( (espconn *)arg );
 
@@ -345,7 +356,8 @@ void ICACHE_FLASH_ATTR easyMesh::meshRecvCb(void *arg, char *data, unsigned shor
 }
 
 /**
- * The control block responsible for popping a conn from sendQueue and sending a package.
+ * The control block responsible for sending a message to another node,
+ * basically popping a conn from sendQueue and sending a package.
  * @param arg The espconn CB.
  */
 void ICACHE_FLASH_ATTR easyMesh::meshSentCb(void *arg) {
@@ -389,7 +401,11 @@ void ICACHE_FLASH_ATTR easyMesh::meshDisconCb(void *arg) {
     }
 }
 
-//***********************************************************************
+/**
+* When we are trying to reconnect..
+* TODO needs to be finished...
+* @param event The SystemEvent to check.
+*/
 void ICACHE_FLASH_ATTR easyMesh::meshReconCb(void *arg, sint8 err) {
     staticThis->debugMsg( ERROR, "In meshReconCb(): err=%d\n", err );
 }

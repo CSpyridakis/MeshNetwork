@@ -1,5 +1,5 @@
-C:\Users\gstamatakis\AppData\Local\Temp\VMBuilds\WSN\esp8266_nodemcuv2\Debug\eashMeshConnection.cpp.o: \
- C:\Users\gstamatakis\AppData\Local\Temp\VMBuilds\WSN\esp8266_nodemcuv2\Debug\eashMeshConnection.cpp \
+C:\Users\gstamatakis\AppData\Local\Temp\VMBuilds\WSN\esp8266_generic\Debug\eashMeshConnection.cpp.o: \
+ C:\Users\gstamatakis\AppData\Local\Temp\VMBuilds\WSN\esp8266_generic\Debug\eashMeshConnection.cpp \
  C:\Users\gstamatakis\AppData\Local\arduino15\packages\esp8266\hardware\esp8266\2.3.0\cores\esp8266/Arduino.h \
  C:\Users\gstamatakis\AppData\Local\arduino15\packages\esp8266\hardware\esp8266\2.3.0\cores\esp8266/stdlib_noniso.h \
  C:\Users\gstamatakis\AppData\Local\arduino15\packages\esp8266\hardware\esp8266\2.3.0\cores\esp8266/binary.h \
@@ -30,8 +30,8 @@ C:\Users\gstamatakis\AppData\Local\Temp\VMBuilds\WSN\esp8266_nodemcuv2\Debug\eas
  C:\Users\gstamatakis\AppData\Local\arduino15\packages\esp8266\hardware\esp8266\2.3.0\cores\esp8266/Stream.h \
  C:\Users\gstamatakis\AppData\Local\arduino15\packages\esp8266\hardware\esp8266\2.3.0\cores\esp8266/md5.h \
  C:\Users\gstamatakis\AppData\Local\arduino15\packages\esp8266\hardware\esp8266\2.3.0\cores\esp8266/debug.h \
- C:\Users\gstamatakis\AppData\Local\arduino15\packages\esp8266\hardware\esp8266\2.3.0\variants\nodemcu/pins_arduino.h \
- C:\Users\gstamatakis\AppData\Local\arduino15\packages\esp8266\hardware\esp8266\2.3.0\variants\nodemcu/../generic/common.h \
+ C:\Users\gstamatakis\AppData\Local\arduino15\packages\esp8266\hardware\esp8266\2.3.0\variants\generic/pins_arduino.h \
+ C:\Users\gstamatakis\AppData\Local\arduino15\packages\esp8266\hardware\esp8266\2.3.0\variants\generic/common.h \
  C:\Program\ Files\ (x86)\Arduino\libraries\ArduinoJson\src/ArduinoJson.h \
  C:\Program\ Files\ (x86)\Arduino\libraries\ArduinoJson\src/ArduinoJson.hpp \
  C:\Program\ Files\ (x86)\Arduino\libraries\ArduinoJson\src/ArduinoJson/DynamicJsonBuffer.hpp \
@@ -124,5 +124,5 @@ C:\Users\gstamatakis\AppData\Local\Temp\VMBuilds\WSN\esp8266_nodemcuv2\Debug\eas
  C:\Users\gstamatakis\AppData\Local\arduino15\packages\esp8266\hardware\esp8266\2.3.0/tools/sdk/include/queue.h \
  C:\Users\gstamatakis\AppData\Local\arduino15\packages\esp8266\hardware\esp8266\2.3.0/tools/sdk/include/spi_flash.h \
  C:\Users\gstamatakis\AppData\Local\arduino15\packages\esp8266\hardware\esp8266\2.3.0/tools/sdk/include/espconn.h \
- C:\Users\gstamatakis\AppData\Local\Temp\VMBuilds\WSN\esp8266_nodemcuv2\Debug\easyMesh.h \
- C:\Users\gstamatakis\AppData\Local\Temp\VMBuilds\WSN\esp8266_nodemcuv2\Debug\easyMeshSync.h
+ C:\Users\gstamatakis\AppData\Local\Temp\VMBuilds\WSN\esp8266_generic\Debug\easyMesh.h \
+ C:\Users\gstamatakis\AppData\Local\Temp\VMBuilds\WSN\esp8266_generic\Debug\easyMeshSync.h

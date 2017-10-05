@@ -92,7 +92,8 @@ void loop() {
             }
             break;
         default:
-            //Relay node, no sensors on board.
+            //Relay node, no sensors on board. Turn built-in LED OFF.
+			digitalWrite(TIMER0_INTERRUPT_PIN, HIGH);
             break;
     }
 
@@ -100,8 +101,6 @@ void loop() {
         broadcastReadings();
         broadcast_ready = false;
     }
-
-    yield();
 }
 
 /**
