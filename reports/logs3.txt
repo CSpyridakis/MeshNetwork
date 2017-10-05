@@ -1,4 +1,4 @@
-n started @ 349135<--
+ started @ 349135<--
 0x8	stationScanCb():-- > scan finished @  2472120 < --
 0x8		found : mesh1461612, -47dBm0x8	 MESH_PRE< ---0x8	
 0x8		found : TP-LINK_9088, -92dBm0x8	
