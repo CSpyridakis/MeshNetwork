@@ -7,7 +7,7 @@
  * 2 -> LDR
  * 3 -> MQ-135
  */
-#define SENSOR_NO 1
+#define SENSOR_NO 0
 
 #define ANALOGPIN A0
 #define DHTPin    12              //GPIO 12 or D6

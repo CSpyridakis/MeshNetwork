@@ -15,6 +15,7 @@ extern easyMesh* staticThis;
 
 /**
  * Initializes the station and starts the AP scan.
+ * Called after init().
  */
 void ICACHE_FLASH_ATTR easyMesh::stationInit( void ) {
     debugMsg( STARTUP, "stationInit():\n");

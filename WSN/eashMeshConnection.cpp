@@ -160,7 +160,11 @@ meshConnectionType* ICACHE_FLASH_ATTR easyMesh::findConnection( espconn *conn ) 
     return NULL;
 }
 
-//***********************************************************************
+
+/**
+* Returns a JSON Array of all subconnections.
+* @param exlude The subconnections of this connection will not be included in the JSON array.
+*/
 String ICACHE_FLASH_ATTR easyMesh::subConnectionJson( meshConnectionType *exclude ) {
     debugMsg( GENERAL, "subConnectionJson(), exclude=%d\n", exclude->chipId );
 

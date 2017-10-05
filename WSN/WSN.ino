@@ -39,7 +39,6 @@ volatile bool broadcast_ready;
 void setup() {
     Serial.begin(115200);
     pinMode(TIMER0_INTERRUPT_PIN, OUTPUT);
-    digitalWrite(TIMER0_INTERRUPT_PIN, LOW);
 
     mesh.setDebugMsgTypes(ERROR | MESH_STATUS | CONNECTION);
     mesh.init(MESH_PREFIX, MESH_PASSWORD, MESH_PORT);
