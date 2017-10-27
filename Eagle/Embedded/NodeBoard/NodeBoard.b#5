@@ -164,7 +164,6 @@
 <circle x="-9.3" y="88.2" radius="1.66433125" width="1.27" layer="1"/>
 <text x="-25.8" y="92.3" size="1.778" layer="1">MeshNode</text>
 <text x="-20" y="89.2" size="1.778" layer="1">V1.0</text>
-<dimension x1="-5.7" y1="179.9" x2="-126.9" y2="180.1" x3="-66.295390625" y3="182.7922375" textsize="1.778" layer="1"/>
 </plain>
 <libraries>
 <library name="rectifier">
