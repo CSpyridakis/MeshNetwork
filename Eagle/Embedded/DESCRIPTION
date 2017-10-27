@@ -1,21 +1,30 @@
-<b>Sensors and Control units for MeshNetwork project</b>
+<b>Sensors and Control units for MeshNetwork project</b><br>
+Based on ESP-12E and ESP-12F (ESP8266) microcontroller<br>
+On Board 110-220v ac to 12v dc circuit<br><br>
 
+
+<h><u>Available power supplies</u></h>
 <p>
-Based on ESP-12E and ESP-12F (ESP8266)
+<ol>
+<li>On board 12V - 1,33A </li>
+<li>5V - 1A </li>
+<li>3,3V - 1A </li>
+<ol>
 </p><br>
 
 <h><u>Available Sensors:</u></h>
 <p>
-1) DHT 11 (Temp and Humidity)<br>
-2) MQ-135 (Air Quality Sensor)  <br>
-3) Photoresistor <br>
-4) Motion Sensor NOT<br>
-5) Emergency Button NOT<br>
-6) Moisture Plant Sensor NOT
+<ol>
+<li>DHT 11 (Temp and Humidity)</li>
+<li>MQ-2 (Smoke and Gas)</li>
+<li> Photoresistor (PLD)</li>
+<ol>
 </p><br>
 
 <h><u>Available Controls:</u></h>
 <p>
-1) 2 Relay<br>
-2) 2 Mosfet
+<ol>
+<li>Control 110-220v ac devices (Relay) </li>
+<li>Control 0-12v dc devices (Mosfet)</li>
+<ol>
 </p>
