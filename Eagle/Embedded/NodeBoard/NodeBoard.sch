@@ -24457,7 +24457,7 @@ Grid 5.00 mm&lt;p&gt;
 <variantdefs>
 </variantdefs>
 <classes>
-<class number="0" name="default" width="0" drill="0">
+<class number="0" name="default" width="0.15" drill="0">
 </class>
 <class number="1" name="220v" width="2.2" drill="0">
 <clearance class="1" value="2.8"/>

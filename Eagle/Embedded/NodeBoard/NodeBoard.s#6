@@ -24660,8 +24660,8 @@ Grid 5.00 mm&lt;p&gt;
 <instance part="GND10" gate="1" x="119.38" y="68.58" smashed="yes">
 <attribute name="VALUE" x="114.3" y="66.04" size="1.778" layer="96"/>
 </instance>
-<instance part="U$5" gate="G$1" x="254" y="86.36"/>
-<instance part="U$6" gate="G$1" x="287.02" y="63.5"/>
+<instance part="U$5" gate="G$1" x="254" y="83.82"/>
+<instance part="U$6" gate="G$1" x="289.56" y="63.5"/>
 <instance part="GND11" gate="1" x="269.24" y="83.82"/>
 <instance part="R8" gate="G$1" x="248.92" y="78.74" smashed="yes">
 <attribute name="NAME" x="245.11" y="75.1586" size="1.778" layer="95"/>
@@ -24874,21 +24874,10 @@ Grid 5.00 mm&lt;p&gt;
 <wire x1="119.38" y1="71.12" x2="119.38" y2="73.66" width="0.1524" layer="91"/>
 </segment>
 <segment>
-<pinref part="U$5" gate="G$1" pin="4"/>
-<pinref part="U$5" gate="G$1" pin="3"/>
-<wire x1="264.16" y1="86.36" x2="264.16" y2="88.9" width="0.1524" layer="91"/>
-<pinref part="GND11" gate="1" pin="GND"/>
-<wire x1="264.16" y1="86.36" x2="269.24" y2="86.36" width="0.1524" layer="91"/>
-<junction x="264.16" y="86.36"/>
-</segment>
-<segment>
-<pinref part="U$6" gate="G$1" pin="3"/>
-<pinref part="U$6" gate="G$1" pin="4"/>
-<wire x1="297.18" y1="66.04" x2="297.18" y2="63.5" width="0.1524" layer="91"/>
 <pinref part="GND12" gate="1" pin="GND"/>
-<wire x1="297.18" y1="63.5" x2="304.8" y2="63.5" width="0.1524" layer="91"/>
-<wire x1="304.8" y1="63.5" x2="304.8" y2="60.96" width="0.1524" layer="91"/>
-<junction x="297.18" y="63.5"/>
+<pinref part="U$6" gate="G$1" pin="3"/>
+<wire x1="299.72" y1="66.04" x2="304.8" y2="66.04" width="0.1524" layer="91"/>
+<wire x1="304.8" y1="66.04" x2="304.8" y2="60.96" width="0.1524" layer="91"/>
 </segment>
 <segment>
 <pinref part="LED2" gate="G$1" pin="C"/>
@@ -24977,6 +24966,11 @@ Grid 5.00 mm&lt;p&gt;
 <pinref part="GND6" gate="1" pin="GND"/>
 <pinref part="R19" gate="G$1" pin="1"/>
 <wire x1="114.3" y1="58.42" x2="114.3" y2="60.96" width="0.1524" layer="91"/>
+</segment>
+<segment>
+<pinref part="U$5" gate="G$1" pin="3"/>
+<pinref part="GND11" gate="1" pin="GND"/>
+<wire x1="264.16" y1="86.36" x2="269.24" y2="86.36" width="0.1524" layer="91"/>
 </segment>
 </net>
 <net name="VCC" class="3">
@@ -25339,33 +25333,28 @@ Grid 5.00 mm&lt;p&gt;
 </net>
 <net name="N$29" class="0">
 <segment>
-<pinref part="U$5" gate="G$1" pin="1"/>
-<pinref part="U$5" gate="G$1" pin="2"/>
-<wire x1="246.38" y1="88.9" x2="246.38" y2="86.36" width="0.1524" layer="91"/>
 <pinref part="U1" gate="G$1" pin="RESET"/>
 <wire x1="208.28" y1="66.04" x2="205.74" y2="66.04" width="0.1524" layer="91"/>
 <wire x1="205.74" y1="66.04" x2="205.74" y2="83.82" width="0.1524" layer="91"/>
 <wire x1="205.74" y1="83.82" x2="243.84" y2="83.82" width="0.1524" layer="91"/>
 <pinref part="JP1" gate="A" pin="2"/>
 <wire x1="243.84" y1="83.82" x2="243.84" y2="86.36" width="0.1524" layer="91"/>
-<wire x1="246.38" y1="86.36" x2="243.84" y2="86.36" width="0.1524" layer="91"/>
-<junction x="246.38" y="86.36"/>
 <junction x="243.84" y="86.36"/>
 <pinref part="R8" gate="G$1" pin="1"/>
 <wire x1="243.84" y1="78.74" x2="243.84" y2="86.36" width="0.1524" layer="91"/>
+<pinref part="U$5" gate="G$1" pin="1"/>
+<wire x1="243.84" y1="86.36" x2="246.38" y2="86.36" width="0.1524" layer="91"/>
 </segment>
 </net>
 <net name="N$22" class="0">
 <segment>
-<pinref part="U$6" gate="G$1" pin="1"/>
-<pinref part="U$6" gate="G$1" pin="2"/>
-<wire x1="279.4" y1="66.04" x2="279.4" y2="63.5" width="0.1524" layer="91"/>
-<wire x1="279.4" y1="63.5" x2="279.4" y2="55.88" width="0.1524" layer="91"/>
-<junction x="279.4" y="63.5"/>
 <pinref part="R9" gate="G$1" pin="1"/>
-<wire x1="279.4" y1="55.88" x2="281.94" y2="55.88" width="0.1524" layer="91"/>
 <pinref part="U1" gate="G$1" pin="GPIO0"/>
 <wire x1="241.3" y1="55.88" x2="279.4" y2="55.88" width="0.1524" layer="91"/>
+<pinref part="U$6" gate="G$1" pin="1"/>
+<wire x1="279.4" y1="55.88" x2="281.94" y2="55.88" width="0.1524" layer="91"/>
+<wire x1="281.94" y1="66.04" x2="279.4" y2="66.04" width="0.1524" layer="91"/>
+<wire x1="279.4" y1="66.04" x2="279.4" y2="55.88" width="0.1524" layer="91"/>
 <junction x="279.4" y="55.88"/>
 </segment>
 </net>

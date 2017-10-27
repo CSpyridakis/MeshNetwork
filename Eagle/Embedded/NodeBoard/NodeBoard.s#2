@@ -24460,7 +24460,7 @@ Grid 5.00 mm&lt;p&gt;
 <class number="0" name="default" width="0" drill="0">
 </class>
 <class number="1" name="220v" width="2.2" drill="0">
-<clearance class="1" value="3"/>
+<clearance class="1" value="2.8"/>
 </class>
 <class number="2" name="12v" width="0.5" drill="0">
 <clearance class="2" value="0.13"/>
@@ -24570,6 +24570,7 @@ Grid 5.00 mm&lt;p&gt;
 <part name="JP5" library="jumper" deviceset="JP2E" device=""/>
 <part name="R19" library="rcl" deviceset="R-US_" device="0204/7"/>
 <part name="GND6" library="supply1" deviceset="GND" device=""/>
+<part name="GND21" library="supply1" deviceset="GND" device=""/>
 </parts>
 <sheets>
 <sheet>
@@ -24745,7 +24746,7 @@ Grid 5.00 mm&lt;p&gt;
 <attribute name="VALUE" x="336.55" y="-11.938" size="1.778" layer="96" rot="R180"/>
 </instance>
 <instance part="GND15" gate="1" x="292.1" y="-12.7"/>
-<instance part="GND16" gate="1" x="342.9" y="-12.7"/>
+<instance part="GND16" gate="1" x="340.36" y="-12.7"/>
 <instance part="JMP5" gate="-0R" x="266.7" y="-12.7" smashed="yes" rot="R180">
 <attribute name="NAME" x="264.16" y="1.27" size="1.778" layer="95" rot="R270"/>
 </instance>
@@ -24806,6 +24807,7 @@ Grid 5.00 mm&lt;p&gt;
 <instance part="GND6" gate="1" x="114.3" y="55.88" smashed="yes">
 <attribute name="VALUE" x="109.22" y="53.34" size="1.778" layer="96"/>
 </instance>
+<instance part="GND21" gate="1" x="345.44" y="-12.7"/>
 </instances>
 <busses>
 </busses>
@@ -24906,13 +24908,9 @@ Grid 5.00 mm&lt;p&gt;
 <wire x1="294.64" y1="-10.16" x2="294.64" y2="-5.08" width="0.1524" layer="91"/>
 </segment>
 <segment>
-<pinref part="R18" gate="G$1" pin="1"/>
 <pinref part="GND16" gate="1" pin="GND"/>
-<wire x1="337.82" y1="-10.16" x2="342.9" y2="-10.16" width="0.1524" layer="91"/>
-<wire x1="342.9" y1="-10.16" x2="345.44" y2="-10.16" width="0.1524" layer="91"/>
-<junction x="342.9" y="-10.16"/>
-<pinref part="C9" gate="G$1" pin="-"/>
-<wire x1="345.44" y1="-10.16" x2="345.44" y2="-5.08" width="0.1524" layer="91"/>
+<pinref part="R18" gate="G$1" pin="1"/>
+<wire x1="337.82" y1="-10.16" x2="340.36" y2="-10.16" width="0.1524" layer="91"/>
 </segment>
 <segment>
 <pinref part="C3" gate="G$1" pin="2"/>
@@ -24971,6 +24969,11 @@ Grid 5.00 mm&lt;p&gt;
 <wire x1="302.26" y1="63.5" x2="304.8" y2="63.5" width="0.1524" layer="91"/>
 <pinref part="GND12" gate="1" pin="GND"/>
 <wire x1="304.8" y1="63.5" x2="304.8" y2="60.96" width="0.1524" layer="91"/>
+</segment>
+<segment>
+<pinref part="C9" gate="G$1" pin="-"/>
+<wire x1="345.44" y1="-10.16" x2="345.44" y2="-5.08" width="0.1524" layer="91"/>
+<pinref part="GND21" gate="1" pin="GND"/>
 </segment>
 </net>
 <net name="VCC" class="3">
@@ -25720,7 +25723,6 @@ Grid 5.00 mm&lt;p&gt;
 <approved hash="105,1,154.94,20.32,N$17,,,,,"/>
 <approved hash="105,1,185.42,62.23,N$19,,,,,"/>
 <approved hash="105,1,313.69,40.64,N$20,,,,,"/>
-<approved hash="105,1,106.68,71.12,N$23,,,,,"/>
 <approved hash="105,1,165.1,43.18,N$24,,,,,"/>
 <approved hash="105,1,106.68,-25.4,N$28,,,,,"/>
 <approved hash="105,1,241.3,21.59,N$30,,,,,"/>

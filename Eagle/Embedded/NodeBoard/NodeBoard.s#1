@@ -24577,7 +24577,7 @@ Grid 5.00 mm&lt;p&gt;
 <plain>
 <text x="139.7" y="-76.2" size="1.778" layer="91">220V AC IN</text>
 <text x="320.04" y="83.82" size="1.778" layer="91">CONTROLS AND PROGRAMMING</text>
-<text x="114.3" y="43.18" size="1.778" layer="91">SENSORS</text>
+<text x="114.3" y="35.56" size="1.778" layer="91">SENSORS</text>
 <text x="358.14" y="-73.66" size="3.81" layer="91">1.0</text>
 <text x="269.24" y="-50.8" size="2.54" layer="91">Embedded system based on ESP8266 12E microcontroller</text>
 <text x="218.44" y="2.54" size="1.778" layer="91">LOW VOLTAGES</text>
@@ -24804,8 +24804,8 @@ Grid 5.00 mm&lt;p&gt;
 <instance part="JP4" gate="1" x="350.52" y="-12.7" rot="R90"/>
 <instance part="JP5" gate="1" x="157.48" y="63.5" rot="R90"/>
 <instance part="R19" gate="G$1" x="119.38" y="60.96"/>
-<instance part="GND6" gate="1" x="114.3" y="55.88" smashed="yes">
-<attribute name="VALUE" x="109.22" y="53.34" size="1.778" layer="96"/>
+<instance part="GND6" gate="1" x="114.3" y="50.8" smashed="yes">
+<attribute name="VALUE" x="109.22" y="48.26" size="1.778" layer="96"/>
 </instance>
 <instance part="GND21" gate="1" x="345.44" y="-12.7"/>
 </instances>
@@ -24957,7 +24957,7 @@ Grid 5.00 mm&lt;p&gt;
 <segment>
 <pinref part="GND6" gate="1" pin="GND"/>
 <pinref part="R19" gate="G$1" pin="1"/>
-<wire x1="114.3" y1="58.42" x2="114.3" y2="60.96" width="0.1524" layer="91"/>
+<wire x1="114.3" y1="53.34" x2="114.3" y2="60.96" width="0.1524" layer="91"/>
 </segment>
 <segment>
 <pinref part="U$5" gate="G$1" pin="4"/>
@@ -25285,9 +25285,9 @@ Grid 5.00 mm&lt;p&gt;
 </net>
 <net name="N$23" class="0">
 <segment>
-<wire x1="106.68" y1="86.36" x2="106.68" y2="48.26" width="0.1524" layer="91" style="shortdash"/>
-<wire x1="106.68" y1="48.26" x2="132.08" y2="48.26" width="0.1524" layer="91" style="shortdash"/>
-<wire x1="132.08" y1="48.26" x2="132.08" y2="86.36" width="0.1524" layer="91" style="shortdash"/>
+<wire x1="106.68" y1="86.36" x2="106.68" y2="45.72" width="0.1524" layer="91" style="shortdash"/>
+<wire x1="106.68" y1="45.72" x2="132.08" y2="45.72" width="0.1524" layer="91" style="shortdash"/>
+<wire x1="132.08" y1="45.72" x2="132.08" y2="86.36" width="0.1524" layer="91" style="shortdash"/>
 <wire x1="132.08" y1="86.36" x2="106.68" y2="86.36" width="0.1524" layer="91" style="shortdash"/>
 </segment>
 </net>
@@ -25723,15 +25723,16 @@ Grid 5.00 mm&lt;p&gt;
 <approved hash="105,1,154.94,20.32,N$17,,,,,"/>
 <approved hash="105,1,185.42,62.23,N$19,,,,,"/>
 <approved hash="105,1,313.69,40.64,N$20,,,,,"/>
+<approved hash="105,1,106.68,66.04,N$23,,,,,"/>
 <approved hash="105,1,165.1,43.18,N$24,,,,,"/>
 <approved hash="105,1,106.68,-25.4,N$28,,,,,"/>
 <approved hash="105,1,241.3,21.59,N$30,,,,,"/>
 <approved hash="105,1,110.49,-35.56,N$61,,,,,"/>
 <approved hash="108,1,182.88,-63.5,N$6,,,,,"/>
-<approved hash="108,1,114.3,-30.48,N$28,,,,,"/>
 <approved hash="108,1,114.3,-20.32,N$28,,,,,"/>
-<approved hash="108,1,114.3,-76.2,N$61,,,,,"/>
+<approved hash="108,1,114.3,-30.48,N$28,,,,,"/>
 <approved hash="108,1,114.3,-35.56,N$61,,,,,"/>
+<approved hash="108,1,114.3,-76.2,N$61,,,,,"/>
 <approved hash="110,1,182.88,-43.18,N$6,N$10,,,,"/>
 <approved hash="111,1,114.3,-38.1,N$61,,,,,"/>
 <approved hash="111,1,114.3,-43.18,N$61,,,,,"/>
@@ -25758,6 +25759,7 @@ Grid 5.00 mm&lt;p&gt;
 <approved hash="113,1,300.661,-13.6754,JP3,,,,,"/>
 <approved hash="113,1,351.461,-13.6754,JP4,,,,,"/>
 <approved hash="113,1,158.421,62.5246,JP5,,,,,"/>
+<approved hash="113,1,119.38,62.0497,R19,,,,,"/>
 </errors>
 </schematic>
 </drawing>
