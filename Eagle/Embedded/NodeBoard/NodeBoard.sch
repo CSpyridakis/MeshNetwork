@@ -24457,22 +24457,23 @@ Grid 5.00 mm&lt;p&gt;
 <variantdefs>
 </variantdefs>
 <classes>
-<class number="0" name="default" width="0.15" drill="0">
+<class number="0" name="default" width="0.5" drill="0">
+<clearance class="0" value="0.45"/>
 </class>
 <class number="1" name="220v" width="2.2" drill="0">
 <clearance class="1" value="2.8"/>
 </class>
 <class number="2" name="12v" width="0.5" drill="0">
-<clearance class="2" value="0.13"/>
+<clearance class="2" value="0.45"/>
 </class>
 <class number="3" name="5v" width="0.5" drill="0">
-<clearance class="3" value="0.13"/>
+<clearance class="3" value="0.45"/>
 </class>
 <class number="4" name="3v3" width="0.5" drill="0">
-<clearance class="4" value="0.13"/>
+<clearance class="4" value="0.45"/>
 </class>
 <class number="5" name="19v" width="1" drill="0">
-<clearance class="5" value="0.25"/>
+<clearance class="5" value="0.45"/>
 </class>
 </classes>
 <parts>

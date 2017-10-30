@@ -36,10 +36,10 @@
 <layer number="26" name="bNames" color="7" fill="1" visible="yes" active="yes"/>
 <layer number="27" name="tValues" color="7" fill="1" visible="yes" active="yes"/>
 <layer number="28" name="bValues" color="7" fill="1" visible="yes" active="yes"/>
-<layer number="29" name="tStop" color="7" fill="3" visible="no" active="yes"/>
-<layer number="30" name="bStop" color="7" fill="6" visible="no" active="yes"/>
-<layer number="31" name="tCream" color="7" fill="4" visible="no" active="yes"/>
-<layer number="32" name="bCream" color="7" fill="5" visible="no" active="yes"/>
+<layer number="29" name="tStop" color="7" fill="3" visible="yes" active="yes"/>
+<layer number="30" name="bStop" color="7" fill="6" visible="yes" active="yes"/>
+<layer number="31" name="tCream" color="7" fill="4" visible="yes" active="yes"/>
+<layer number="32" name="bCream" color="7" fill="5" visible="yes" active="yes"/>
 <layer number="33" name="tFinish" color="6" fill="3" visible="yes" active="yes"/>
 <layer number="34" name="bFinish" color="6" fill="6" visible="yes" active="yes"/>
 <layer number="35" name="tGlue" color="7" fill="4" visible="yes" active="yes"/>
@@ -154,16 +154,18 @@
 </layers>
 <board>
 <plain>
-<wire x1="-126.6" y1="179.6" x2="-126.6" y2="83.8" width="0" layer="20"/>
-<wire x1="-126.6" y1="83.8" x2="-5.3" y2="83.8" width="0" layer="20"/>
-<wire x1="-5.3" y1="83.8" x2="-5.3" y2="179.6" width="0" layer="20"/>
-<wire x1="-5.3" y1="179.6" x2="-126.6" y2="179.6" width="0" layer="20"/>
+<wire x1="-126.3" y1="179.7" x2="-126.3" y2="83.7" width="0" layer="20"/>
+<wire x1="-126.3" y1="83.7" x2="-5.3" y2="83.7" width="0" layer="20"/>
+<wire x1="-5.3" y1="83.7" x2="-5.3" y2="179.7" width="0" layer="20"/>
+<wire x1="-5.3" y1="179.7" x2="-126.3" y2="179.7" width="0" layer="20"/>
 <circle x="-120.5" y="89.7" radius="1.66433125" width="1.27" layer="1"/>
 <circle x="-121.4" y="176" radius="1.66433125" width="1.27" layer="1"/>
 <circle x="-9.3" y="175.9" radius="1.66433125" width="1.27" layer="1"/>
 <circle x="-9.3" y="88.2" radius="1.66433125" width="1.27" layer="1"/>
 <text x="-25.8" y="92.3" size="1.778" layer="1">MeshNode</text>
 <text x="-20" y="89.2" size="1.778" layer="1">V1.0</text>
+<dimension x1="-126.3" y1="179.7" x2="-5.3" y2="179.7" x3="-65.8" y3="181.8" textsize="1.778" layer="1"/>
+<dimension x1="-126.3" y1="179.7" x2="-126.3" y2="83.7" x3="-127.8" y3="131.7" textsize="1.778" layer="1"/>
 </plain>
 <libraries>
 <library name="rectifier">
@@ -3491,12 +3493,12 @@ design rules under a new name.</description>
 <attribute name="OC_FARNELL" value="1097566" x="-57.2" y="164.3" size="1.778" layer="27" display="off"/>
 <attribute name="OC_NEWARK" value="14P6981" x="-57.2" y="164.3" size="1.778" layer="27" display="off"/>
 </element>
-<element name="J1" library="con-jack" package="DCJ0202" value="DCJ0202" x="-18.82" y="149.13" smashed="yes" rot="MR270">
-<attribute name="MF" value="" x="-18.82" y="149.13" size="1.778" layer="28" rot="MR270" display="off"/>
-<attribute name="MPN" value="" x="-18.82" y="149.13" size="1.778" layer="28" rot="MR270" display="off"/>
-<attribute name="NAME" x="-23.4" y="152.84" size="1.27" layer="26" rot="MR270"/>
-<attribute name="OC_FARNELL" value="unknown" x="-18.82" y="149.13" size="1.778" layer="28" rot="MR270" display="off"/>
-<attribute name="OC_NEWARK" value="unknown" x="-18.82" y="149.13" size="1.778" layer="28" rot="MR270" display="off"/>
+<element name="J1" library="con-jack" package="DCJ0202" value="DCJ0202" x="-15.82" y="149.33" smashed="yes" rot="MR270">
+<attribute name="MF" value="" x="-15.82" y="149.33" size="1.778" layer="28" rot="MR270" display="off"/>
+<attribute name="MPN" value="" x="-15.82" y="149.33" size="1.778" layer="28" rot="MR270" display="off"/>
+<attribute name="NAME" x="-20.4" y="153.04" size="1.27" layer="26" rot="MR270"/>
+<attribute name="OC_FARNELL" value="unknown" x="-15.82" y="149.33" size="1.778" layer="28" rot="MR270" display="off"/>
+<attribute name="OC_NEWARK" value="unknown" x="-15.82" y="149.33" size="1.778" layer="28" rot="MR270" display="off"/>
 </element>
 <element name="JMP3" library="jump-0r-smd" package="A0R-JMP" value="0R-JUMPA" x="-20.97" y="112.74" smashed="yes"/>
 <element name="JMP4" library="jump-0r-smd" package="A0R-JMP" value="0R-JUMPA" x="-21.02" y="106.7" smashed="yes" rot="R180"/>
@@ -3961,22 +3963,18 @@ design rules under a new name.</description>
 <wire x1="-39.52" y1="148.92" x2="-37.21" y2="148.92" width="0.5" layer="1"/>
 <wire x1="-48.39" y1="157.79" x2="-50.68" y2="157.79" width="0.5" layer="1"/>
 <wire x1="-39.52" y1="148.92" x2="-48.39" y2="157.79" width="0.5" layer="1"/>
-<wire x1="-27.6" y1="139.8" x2="-27.6" y2="143.45" width="0.5" layer="1"/>
-<wire x1="-27.6" y1="139.8" x2="-28.7" y2="138.7" width="0.5" layer="1"/>
 <wire x1="-35.9" y1="138.7" x2="-40.9" y2="143.7" width="0.5" layer="1"/>
 <wire x1="-40.9" y1="143.7" x2="-40.9" y2="147.54" width="0.5" layer="1"/>
 <wire x1="-40.9" y1="147.54" x2="-39.52" y2="148.92" width="0.5" layer="1"/>
-<wire x1="-28.7" y1="138.7" x2="-35.9" y2="138.7" width="0.5" layer="1"/>
-<via x="-27.6" y="143.45" extent="1-16" drill="0.35"/>
-<wire x1="-11.52" y1="157.6" x2="-19.99" y2="149.13" width="0.5" layer="1"/>
+<wire x1="-35.9" y1="138.7" x2="-28.7" y2="138.7" width="0.5" layer="1"/>
 <wire x1="-12.61" y1="138.59" x2="-14.39" y2="138.59" width="0.5" layer="1"/>
-<wire x1="-14.39" y1="138.59" x2="-17.2" y2="141.4" width="0.5" layer="1"/>
-<wire x1="-17.2" y1="141.4" x2="-25.55" y2="141.4" width="0.5" layer="1"/>
-<wire x1="-25.55" y1="141.4" x2="-27.6" y2="143.45" width="0.5" layer="1"/>
-<wire x1="-21.9" y1="149.13" x2="-19.99" y2="149.13" width="0.5" layer="1"/>
-<wire x1="-21.9" y1="149.13" x2="-21.92" y2="149.13" width="0.5" layer="1"/>
-<wire x1="-27.6" y1="143.45" x2="-27.58" y2="143.45" width="0.5" layer="1"/>
-<wire x1="-27.58" y1="143.45" x2="-21.9" y2="149.13" width="0.5" layer="1"/>
+<wire x1="-17.2" y1="141.4" x2="-14.39" y2="138.59" width="0.5" layer="1"/>
+<wire x1="-28.7" y1="138.7" x2="-26" y2="141.4" width="0.5" layer="1"/>
+<wire x1="-26" y1="141.4" x2="-17.2" y2="141.4" width="0.5" layer="1"/>
+<wire x1="-26" y1="141.4" x2="-26" y2="145.03" width="0.5" layer="1"/>
+<wire x1="-26" y1="145.03" x2="-23.22" y2="145.03" width="0.5" layer="1"/>
+<wire x1="-23.22" y1="145.03" x2="-18.92" y2="149.33" width="0.5" layer="1"/>
+<wire x1="-18.92" y1="149.33" x2="-11.52" y2="157.6" width="0" layer="19" extent="1-1"/>
 </signal>
 <signal name="N$21">
 <contactref element="U1" pad="GPIO16"/>
