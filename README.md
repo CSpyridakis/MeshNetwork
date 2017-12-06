@@ -1,13 +1,8 @@
 [HPY411] Embedded Systems
 
-#Milestones
-1. 6/10/17  -> PASS (100/100)
-2. 3/11/17  -> PASS (100/100)
-3. 24/11/17 -> PASS (100/100)
-
 #Directories
 
-Proposal and Milestone Reports: reports/
+Milestone Reports and Presentation: reports/
 
 Eagle Schematics: Eagle/Embedded/NodeBoard/
 
